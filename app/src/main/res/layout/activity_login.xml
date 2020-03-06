@@ -4,7 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#F44336"
     tools:context=".RegisterActivity">
 
 
@@ -15,7 +14,7 @@
         android:layout_height="wrap_content"
         android:text="AUGBUS"
         android:layout_centerHorizontal="true"
-        android:textColor="#FFFFFFFF"
+        android:textColor="#5D3EA8"
         android:textStyle="bold"
         android:layout_marginTop="100dp"
         app:fontFamily="casual"
@@ -54,10 +53,11 @@
     <Button
         android:id="@+id/continueButton"
         android:layout_below="@id/phoneSpinner"
+        android:layout_marginTop="20dp"
         android:layout_centerHorizontal="true"
         android:layout_width="300dp"
         android:layout_height="50dp"
-        android:background="#fd5245"
+        android:background="@drawable/button_background"
         android:text="Continue"
         android:textColor="#FFFFFFFF"
         app:layout_constraintEnd_toEndOf="parent"
