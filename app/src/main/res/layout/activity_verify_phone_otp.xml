@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#F44336"
+    tools:context="com.example.map.VerifyPhoneOtp">
+
+
+    <TextView
+
+        android:id="@+id/textView10"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="AUGBUS"
+        android:layout_centerHorizontal="true"
+        android:textColor="#FFFFFFFF"
+        android:textStyle="bold"
+        android:layout_marginTop="100dp"
+        app:fontFamily="casual"
+        android:textSize="30dp"
+        app:textAllCaps="false" />
+
+    <LinearLayout
+
+        android:id="@+id/phoneSpinner"
+        android:layout_width="wrap_content"
+        android:orientation="horizontal"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@id/textView10"
+        android:layout_height="wrap_content">
+
+
+        <EditText
+            android:id="@+id/enterOtp"
+            android:layout_width="200dp"
+            android:layout_height="50dp"
+            android:hint="Enter Otp"
+            android:textColorHint="#FFFFFF"
+            android:textColorLink="@color/colorAccent"
+            android:textColor="#FFFFFFFF"
+
+            />
+
+    </LinearLayout>
+
+
+    <Button
+        android:id="@+id/verifyButton"
+        android:layout_below="@id/phoneSpinner"
+        android:layout_centerHorizontal="true"
+        android:layout_width="300dp"
+        android:layout_height="50dp"
+        android:background="#fd5245"
+        android:text="Verify"
+        android:textColor="#FFFFFFFF"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        />
+
+    <TextView
+        android:id="@+id/timerText"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@id/verifyButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="00:00"
+        android:textColor="#FFFFFFFF"/>
+
+
+</RelativeLayout>

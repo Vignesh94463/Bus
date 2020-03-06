@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "229373929539",
+    "firebase_url": "https://augbus-94463.firebaseio.com",
+    "project_id": "augbus-94463",
+    "storage_bucket": "augbus-94463.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:229373929539:android:ba9f9376d17f933e860cf6",
+        "android_client_info": {
+          "package_name": "com.example.bus"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "229373929539-cb6ppt01899atn0llc4s11ve7fpo4lm5.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.bus",
+            "certificate_hash": "c849de1a8f73e168f72769c56dff981352d20f8f"
+          }
+        },
+        {
+          "client_id": "229373929539-s9nfqvoebn2jii0poegj9tvme2t5f17s.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBX2WPRc-UEgHGiUP3mfML0DdadrExIR3s"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "229373929539-s9nfqvoebn2jii0poegj9tvme2t5f17s.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
