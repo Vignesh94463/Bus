@@ -112,7 +112,7 @@ public class MapsActivityParent extends FragmentActivity implements OnMapReadyCa
                         mDriverMarker.remove();
                     }
 
-                    mDriverMarker = mMap.addMarker(new MarkerOptions().position(driverLatLang).title("Bus 1").icon(BitmapDescriptorFactory.fromResource(R.drawable.bus2)));
+                    mDriverMarker = mMap.addMarker(new MarkerOptions().position(driverLatLang).title("Bus 1").icon(BitmapDescriptorFactory.fromResource(R.drawable.busgps2)));
                     if (track == true) {
                         CameraPosition cameraPosition = new CameraPosition.Builder().target(driverLatLang).zoom(14f).bearing(45)/*.tilt(60)*/.build();
                         CameraUpdate cu = CameraUpdateFactory.newCameraPosition(cameraPosition);
