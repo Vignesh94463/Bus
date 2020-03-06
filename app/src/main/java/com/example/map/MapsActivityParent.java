@@ -15,11 +15,13 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -112,8 +114,12 @@ public class MapsActivityParent extends FragmentActivity implements OnMapReadyCa
 
                     mDriverMarker = mMap.addMarker(new MarkerOptions().position(driverLatLang).title("Bus 1").icon(BitmapDescriptorFactory.fromResource(R.drawable.bus2)));
                     if (track == true) {
-                        mMap.moveCamera(CameraUpdateFactory.newLatLng(driverLatLang));
-                        mMap.animateCamera(CameraUpdateFactory.zoomTo(13));
+                        CameraPosition cameraPosition = new CameraPosition.Builder().target(driverLatLang).zoom(14f).bearing(45)/*.tilt(60)*/.build();
+                        CameraUpdate cu = CameraUpdateFactory.newCameraPosition(cameraPosition);
+                        mMap.animateCamera(cu);
+
+//                        mMap.moveCamera(CameraUpdateFactory.newLatLng(driverLatLang));
+//                        mMap.animateCamera(CameraUpdateFactory.zoomTo(15));
                     }
 
 //                    Toast toast = Toast.makeText(MapsActivityParent.this,driverLatLang.toString(),Toast.LENGTH_LONG);
