@@ -6,48 +6,50 @@
     android:layout_height="match_parent"
     tools:context=".RegisterActivity">
 
-
-    <TextView
-
-        android:id="@+id/textView9"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="AUGBUS"
-        android:layout_centerHorizontal="true"
-        android:textColor="#5D3EA8"
-        android:textStyle="bold"
+    <ImageView
+        android:id="@+id/appicon"
         android:layout_marginTop="100dp"
-        app:fontFamily="casual"
-        android:textSize="30dp"
-        app:textAllCaps="false" />
+        android:layout_width="wrap_content"
+        android:layout_height="118dp"
+        android:layout_centerHorizontal="true"
+        android:src="@drawable/appicon" />
 
-    <LinearLayout
+
+    <RelativeLayout
 
         android:id="@+id/phoneSpinner"
-        android:layout_width="wrap_content"
-        android:orientation="horizontal"
-        android:layout_centerHorizontal="true"
-        android:layout_below="@id/textView9"
+        android:layout_width="match_parent"
+        android:layout_marginTop="30dp"
+        android:layout_below="@id/appicon"
         android:layout_height="wrap_content">
 
         <Spinner
             android:id="@+id/spinnerCountries"
-            android:layout_width="wrap_content"
+            android:layout_width="80dp"
+            android:textColor="#ffffff"
+            android:layout_marginLeft="10dp"
+            android:textSize="20sp"
             android:layout_height="wrap_content"
+            android:background="@drawable/spinner_background"
         />
         <EditText
             android:id="@+id/phoneOtp"
-            android:layout_width="200dp"
+            android:layout_width="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:paddingLeft="10dp"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="10dp"
             android:layout_height="50dp"
-
-            android:hint="Phone no"
-            android:textColorHint="#FFFFFF"
+            android:background="@drawable/textfield_background"
+            android:hint="Phone no..."
+            android:layout_marginLeft="100dp"
+            android:textColorHint="#A8A2A2"
             android:textColorLink="@color/colorAccent"
-            android:textColor="#FFFFFFFF"
+            android:textColor="#000"
 
          />
 
-    </LinearLayout>
+    </RelativeLayout>
 
 
     <Button
@@ -55,8 +57,12 @@
         android:layout_below="@id/phoneSpinner"
         android:layout_marginTop="20dp"
         android:layout_centerHorizontal="true"
-        android:layout_width="300dp"
-        android:layout_height="50dp"
+        android:layout_width="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_marginLeft="10dp"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="10dp"
+        android:layout_height="60dp"
         android:background="@drawable/button_background"
         android:text="Continue"
         android:textColor="#FFFFFFFF"
