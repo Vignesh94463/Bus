@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
+    android:background="#fff"
     android:layout_height="match_parent"
     tools:context=".RegisterActivity">
 
@@ -19,13 +20,13 @@
 
         android:id="@+id/phoneSpinner"
         android:layout_width="match_parent"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="60dp"
         android:layout_below="@id/appicon"
         android:layout_height="wrap_content">
 
         <Spinner
             android:id="@+id/spinnerCountries"
-            android:layout_width="80dp"
+            android:layout_width="wrap_content"
             android:textColor="#ffffff"
             android:layout_marginLeft="10dp"
             android:textSize="20sp"
@@ -35,6 +36,7 @@
         <EditText
             android:id="@+id/phoneOtp"
             android:layout_width="wrap_content"
+            android:inputType="number"
             android:layout_alignParentLeft="true"
             android:paddingLeft="10dp"
             android:layout_alignParentRight="true"
@@ -42,9 +44,8 @@
             android:layout_height="50dp"
             android:background="@drawable/textfield_background"
             android:hint="Phone no..."
-            android:layout_marginLeft="100dp"
+            android:layout_marginLeft="70dp"
             android:textColorHint="#A8A2A2"
-            android:textColorLink="@color/colorAccent"
             android:textColor="#000"
 
          />
@@ -55,7 +56,7 @@
     <Button
         android:id="@+id/continueButton"
         android:layout_below="@id/phoneSpinner"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="35dp"
         android:layout_centerHorizontal="true"
         android:layout_width="wrap_content"
         android:layout_alignParentLeft="true"

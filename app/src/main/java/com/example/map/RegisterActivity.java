@@ -26,7 +26,7 @@ public class RegisterActivity extends AppCompatActivity {
 //            }
 //
 //        });
-        getSupportActionBar().hide();
+//        getSupportActionBar().hide();
 
 
     }

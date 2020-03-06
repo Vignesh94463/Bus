@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -38,7 +39,7 @@ public class VerifyPhoneOtp extends AppCompatActivity {
     private  String phonenumber,userstatus;
 
     private long mTimeLeft = Start_Time;
-
+    ImageView imageView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,10 +50,19 @@ public class VerifyPhoneOtp extends AppCompatActivity {
 
         mtimerText = findViewById(R.id.timerText);
         startTimer();
-
+        imageView=(ImageView)findViewById(R.id.appicon);
+        imageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent=new Intent(VerifyPhoneOtp.this,SendPhoneOtp.class);
+                startActivity(intent);
+                Toast.makeText(VerifyPhoneOtp.this,"work",Toast.LENGTH_LONG).show();
+            }
+        });
         mAuth = FirebaseAuth.getInstance();
         editText = findViewById(R.id.enterOtp);
         phonenumber = getIntent().getStringExtra("phonenumber");
+
         userstatus=getIntent().getStringExtra("userstatus");
 
         sendVerificationCode(phonenumber);
