@@ -58,7 +58,7 @@ public class SendPhoneOtp extends AppCompatActivity {
         findViewById(R.id.continueButton).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                loading.startLoading();
+
                  code = countryCode[spinner.getSelectedItemPosition()];
 
 
@@ -68,6 +68,10 @@ public class SendPhoneOtp extends AppCompatActivity {
                      editText.setError("Valid Number is required");
                      editText.requestFocus();
                      return;
+                 }
+
+                 else{
+                     loading.startLoading();
                  }
 
                  OkHttpClient client = new OkHttpClient();
@@ -102,6 +106,8 @@ public class SendPhoneOtp extends AppCompatActivity {
                                  Intent intent = new Intent(SendPhoneOtp.this,VerifyPhoneOtp.class);
                                  intent.putExtra("phonenumber",phoneNumber);
                                  intent.putExtra("userstatus",userstatus);
+
+                                 loading.dismissDialog();//stop loading
                                  startActivity(intent);
 
                              } catch (JSONException e) {
@@ -120,6 +126,7 @@ public class SendPhoneOtp extends AppCompatActivity {
                              SendPhoneOtp.this.runOnUiThread(new Runnable() {
                                  @Override
                                  public void run() {
+                                     loading.dismissDialog();//stop loading
 //                                     editText.setText(response.body().string());
                                      Toast.makeText(SendPhoneOtp.this,"Phone Number not Regestered",Toast.LENGTH_LONG).show();
                                  }
@@ -128,6 +135,7 @@ public class SendPhoneOtp extends AppCompatActivity {
                          }
 
                      }
+
                  });
 
 
