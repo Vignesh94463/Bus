@@ -1,122 +1,149 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:background="#fff"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@drawable/appbackground"
     android:layout_height="match_parent"
     tools:context="com.example.map.Fragments.Notification">
 
-    <!-- TODO: Update blank fragment layout -->
-
-
-    <RelativeLayout
+    <LinearLayout
+        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:id="@+id/firstrow"
-        android:layout_marginTop="110dp"
         android:layout_height="wrap_content">
         <RelativeLayout
-            android:layout_width="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_marginLeft="40dp"
-            android:layout_height="wrap_content">
-            <ImageView
-                android:id="@+id/trackBus"
-                android:layout_width="120dp"
-                android:layout_height="120dp"
-                android:layout_marginTop="0dp"
-                android:src="@drawable/trackbus"
-                />
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Track Bus"
-                android:textSize="20dp"
-                android:layout_marginTop="10dp"
-                android:textColor="#5D3EA8"
-                android:layout_below="@+id/trackBus"
-                android:layout_centerHorizontal="true"
-
-                />
-        </RelativeLayout>
-        <RelativeLayout
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_marginRight="40dp">
-
-            <ImageView
-                android:id="@+id/driverDetail"
-                android:layout_width="120dp"
-                android:layout_height="120dp"
-                android:src="@drawable/drivericon"
-                />
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="28dp">
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Driver Details"
-                android:textSize="20dp"
-                android:layout_marginTop="10dp"
-                android:textColor="#5D3EA8"
-                android:layout_below="@+id/driverDetail"
-                android:layout_centerHorizontal="true"
-
-                />
+                android:layout_marginTop="20dp"
+                android:textColor="#fff"
+                android:text="My Dashboard"
+                android:textSize="25sp"/>
         </RelativeLayout>
-
-    </RelativeLayout>
-
-    <RelativeLayout
-        android:layout_below="@+id/firstrow"
-        android:layout_width="match_parent"
-        android:layout_marginTop="110dp"
-        android:layout_height="wrap_content">
-        <RelativeLayout
-            android:layout_width="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_marginLeft="40dp"
-            android:layout_height="wrap_content">
-            <ImageView
-                android:id="@+id/schoolDetail"
-                android:layout_width="120dp"
-                android:layout_height="120dp"
-                android:layout_marginTop="0dp"
-                android:src="@drawable/schoolicon"
-                />
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Track Bus"
-                android:textSize="20dp"
-                android:layout_marginTop="10dp"
-                android:textColor="#5D3EA8"
-                android:layout_below="@+id/schoolDetail"
-                android:layout_centerHorizontal="true"
-
-                />
-        </RelativeLayout>
-        <RelativeLayout
-            android:layout_width="wrap_content"
+        <GridLayout
+            android:layout_marginTop="60dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_marginRight="40dp">
-
-            <ImageView
-                android:id="@+id/logout"
-                android:layout_width="120dp"
-                android:layout_height="120dp"
-                android:src="@drawable/logouticon"
-                />
-            <TextView
+            android:columnCount="2"
+            android:rowCount="3"
+            android:alignmentMode="alignMargins"
+            android:columnOrderPreserved="false">
+            <androidx.cardview.widget.CardView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Logout"
-                android:textSize="20dp"
-                android:layout_marginTop="10dp"
-                android:textColor="#5D3EA8"
-                android:layout_below="@+id/logout"
-                android:layout_centerHorizontal="true"
+                android:layout_columnWeight="1"
+                app:cardElevation="6dp"
+                app:cardCornerRadius="12dp"
+                android:layout_margin="12dp"
+                >
+                <LinearLayout
+                    android:orientation="vertical"
+                    android:padding="16dp"
+                    android:gravity="center"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+                    <ImageView
+                        android:layout_width="80dp"
+                        android:layout_height="80dp"
+                        android:src="@drawable/location"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="15sp"
+                        android:text="Track Bus"
+                        android:textColor="#5D3EA8"
+                        android:layout_marginTop="12dp"/>
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+            <androidx.cardview.widget.CardView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_columnWeight="1"
+                app:cardElevation="6dp"
+                app:cardCornerRadius="12dp"
+                android:layout_margin="12dp"
+                >
+                <LinearLayout
+                    android:orientation="vertical"
+                    android:padding="16dp"
+                    android:gravity="center"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+                    <ImageView
+                        android:layout_width="80dp"
+                        android:layout_height="80dp"
+                        android:src="@drawable/driverdetail"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="18sp"
+                        android:text="Driver Details"
+                        android:textColor="#5D3EA8"
+                        android:layout_marginTop="12dp"/>
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+            <androidx.cardview.widget.CardView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_columnWeight="1"
+                app:cardElevation="6dp"
+                app:cardCornerRadius="12dp"
+                android:layout_margin="12dp"
+                >
+                <LinearLayout
+                    android:orientation="vertical"
+                    android:padding="16dp"
+                    android:gravity="center"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+                    <ImageView
+                        android:layout_width="80dp"
+                        android:layout_height="80dp"
+                        android:src="@drawable/highschool"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="18sp"
+                        android:text="School Details"
+                        android:textColor="#5D3EA8"
+                        android:layout_marginTop="12dp"/>
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+            <androidx.cardview.widget.CardView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_columnWeight="1"
+                app:cardElevation="6dp"
+                app:cardCornerRadius="12dp"
+                android:layout_margin="12dp"
+                >
+                <LinearLayout
+                    android:orientation="vertical"
+                    android:padding="16dp"
+                    android:gravity="center"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+                    <ImageView
+                        android:layout_width="80dp"
+                        android:layout_height="80dp"
+                        android:src="@drawable/logout"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="18sp"
+                        android:text="Logout"
+                        android:textColor="#5D3EA8"
+                        android:layout_marginTop="12dp"/>
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+        </GridLayout>
+    </LinearLayout>
 
-                />
-        </RelativeLayout>
 
-    </RelativeLayout>
-</RelativeLayout>
+
+
+
+</ScrollView>
