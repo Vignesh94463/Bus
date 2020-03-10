@@ -54,7 +54,6 @@ public class SendPhoneOtp extends AppCompatActivity {
         spinner.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item,countryaNames));
 
         editText = findViewById(R.id.phoneOtp);
-
         findViewById(R.id.continueButton).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -93,6 +92,7 @@ public class SendPhoneOtp extends AppCompatActivity {
                              try {
                                  JSONObject jsonObject=new JSONObject(myResponse);
                                  JSONObject data = jsonObject.getJSONObject("data");
+
                                  userstatus = data.getString("is_driver");
                                  File path = Environment.getExternalStorageDirectory();
                                  String filename = "Augbusfile.txt";

@@ -14,6 +14,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 //import com.example.map.Fragments.Notification;
@@ -31,17 +32,64 @@ import com.google.firebase.messaging.FirebaseMessaging;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.OkHttpClient;
 
 public class DriverHome extends AppCompatActivity {
 
     private RequestQueue mRequestQue;
     private String URL = "https://fcm.googleapis.com/fcm/send";
+    private Spinner spinnerBus;
+    private String url ="https://auggbus.herokuapp.com/";
+    private String busCount;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        Toast.makeText(DriverHome.this,"work",Toast.LENGTH_LONG).show();
+//        Log.i("the your message will go here");
+        /*===========================Request for no of busses=============================================*/
+
+        OkHttpClient client = new OkHttpClient();
+        okhttp3.Request request = new okhttp3.Request.Builder().url(url+"bus_details").build();
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+
+            }
+
+            @Override
+            public void onResponse(Call call, okhttp3.Response response) throws IOException {
+
+                if(response.isSuccessful())
+                {
+                    String myResponse = response.body().string();
+                try {
+                    JSONObject jsonObject = new JSONObject(myResponse);
+//                    JSONObject data = jsonObject.getJSONObject("data");
+//                    busCount = data.getString("bus_number");
+
+                    System.out.println(jsonObject);
+                    Log.d("sasi", "sasi");
+
+
+                }catch (JSONException e) {
+                    e.printStackTrace();
+                    }
+                }
+
+            }
+        });
+
+
+        /*================================================================================================*/
 
         mRequestQue = Volley.newRequestQueue(this);
         FirebaseMessaging.getInstance().subscribeToTopic("news");
