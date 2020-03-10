@@ -10,14 +10,12 @@
 
     <Spinner
         android:id="@+id/spinnerBus"
-        android:text="Select Bus"
-        android:layout_width="80dp"
-        android:layout_height="wrap_content"
+        android:layout_width="150dp"
+        android:layout_height="50dp"
         android:layout_above="@id/startRide"
         android:layout_centerHorizontal="true"
 
         android:layout_marginBottom="94dp"
-        android:background="@drawable/spinner_background"
         android:textColor="#ffffff"
         android:textSize="20sp" />
 

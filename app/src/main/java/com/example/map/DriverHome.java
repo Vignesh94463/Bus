@@ -13,6 +13,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.Toast;
@@ -28,33 +29,42 @@ import com.android.volley.toolbox.JsonRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.messaging.FirebaseMessaging;
+import static com.example.map.CountryData.countryaNames;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.OkHttpClient;
 
+
 public class DriverHome extends AppCompatActivity {
 
     private RequestQueue mRequestQue;
     private String URL = "https://fcm.googleapis.com/fcm/send";
-    private Spinner spinnerBus;
+    private Spinner mspinnerBus;
     private String url ="https://auggbus.herokuapp.com/";
-    private String busCount;
+    private ArrayList<String> busNumber = new ArrayList<String>();
+    public String[] countryNames = {"+ 91","+ 92"};
+
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_driver_home);
 
-        Toast.makeText(DriverHome.this,"work",Toast.LENGTH_LONG).show();
-//        Log.i("the your message will go here");
+        mspinnerBus = findViewById(R.id.spinnerBus);
+
+
         /*===========================Request for no of busses=============================================*/
 
         OkHttpClient client = new OkHttpClient();
@@ -73,29 +83,27 @@ public class DriverHome extends AppCompatActivity {
                     String myResponse = response.body().string();
                 try {
                     JSONObject jsonObject = new JSONObject(myResponse);
-//                    JSONObject data = jsonObject.getJSONObject("data");
-//                    busCount = data.getString("bus_number");
+                    JSONArray data = jsonObject.getJSONArray("data");
 
-                    System.out.println(jsonObject);
-                    Log.d("sasi", "sasi");
-
+                    for(int i = 0; i<data.length();i++){
+                        busNumber.add("Bus "+Integer.toString(i));
+                    }
+                    System.out.println(busNumber);
 
                 }catch (JSONException e) {
                     e.printStackTrace();
                     }
                 }
+                updateSpinner();
+
 
             }
         });
-
-
         /*================================================================================================*/
 
         mRequestQue = Volley.newRequestQueue(this);
         FirebaseMessaging.getInstance().subscribeToTopic("news");
 
-
-        setContentView(R.layout.activity_driver_home);
 
         findViewById(R.id.startRide).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -201,6 +209,17 @@ public class DriverHome extends AppCompatActivity {
         Toast toast = Toast.makeText(DriverHome.this,"pappus",Toast.LENGTH_LONG);
         toast.show();
 
+
+    }
+    public void updateSpinner(){
+
+        System.out.println(busNumber);
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                mspinnerBus.setAdapter(new ArrayAdapter<String>(DriverHome.this, android.R.layout.simple_spinner_dropdown_item,busNumber));
+            }
+        });
 
     }
 
