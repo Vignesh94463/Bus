@@ -26,8 +26,11 @@ import java.io.InputStreamReader;
 
 import okhttp3.Call;
 import okhttp3.Callback;
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
+import okhttp3.RequestBody;
 import okhttp3.Response;
 
 import static com.example.map.CountryData.countryCode;
@@ -47,43 +50,55 @@ public class SendPhoneOtp extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-
+//loading
         final Loading loading = new Loading(SendPhoneOtp.this);
-
+//=========================spinner + 91
         spinner = findViewById(R.id.spinnerCountries);
         spinner.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item,countryaNames));
 
         editText = findViewById(R.id.phoneOtp);
         findViewById(R.id.continueButton).setOnClickListener(new View.OnClickListener() {
             @Override
+
             public void onClick(View view) {
 
                  code = countryCode[spinner.getSelectedItemPosition()];
+                 number = editText.getText().toString().trim();// get number from text view
 
-
-
-                 number = editText.getText().toString().trim();
                  if(number.isEmpty()||number.length()<10){
                      editText.setError("Valid Number is required");
                      editText.requestFocus();
                      return;
                  }
-
                  else{
                      loading.startLoading();
                  }
 
                  OkHttpClient client = new OkHttpClient();
-                 Request request = new Request.Builder().url(url+number).build();
+//                 Request request = new Request.Builder().url(url+number).build(); code for get request
+//post methode request
+                 MediaType MEDIA_TYPE = MediaType.parse("application/json");
+                 JSONObject postdata = new JSONObject();
+                 try {
+                    postdata.put("mobile_number", number);
 
+                 } catch(JSONException e){
+                    e.printStackTrace();
+                 }
+                 RequestBody body = RequestBody.create(MEDIA_TYPE, postdata.toString());
+                 final Request request = new Request.Builder()
+                        .url(url)
+                        .post(body)
+                        .addHeader("Content-Type", "application/json")
+                        .build();
+
+// callback for the http request
                  client.newCall(request).enqueue(new Callback() {
                      @Override
                      public void onFailure(Call call, IOException e) {
                          e.printStackTrace();
 
-
                      }
-
                      @Override
                      public void onResponse(Call call, Response response) throws IOException {
 

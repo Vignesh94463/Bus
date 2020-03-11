@@ -119,13 +119,13 @@ public class MapsActivityDriver extends FragmentActivity implements OnMapReadyCa
     @Override
     public void onLocationChanged(Location location) {
 
-
+        int bearing = (int) mMap.getMyLocation().getBearing();
         mLastLocation = location;
         LatLng latLng = new LatLng(location.getLatitude(),location.getLongitude());
 //        mMap.animateCamera(CameraUpdateFactory.newLatLng(latLng));
 //        mMap.animateCamera(CameraUpdateFactory.zoomTo(13));
 //        mMap.animateCamera(CameraUpdateFactory.zoomIn());
-        CameraPosition cameraPosition = new CameraPosition.Builder().target(latLng).zoom(13f).bearing(45)/*.tilt(60)*/.build();
+        CameraPosition cameraPosition = new CameraPosition.Builder().target(latLng).zoom(13f).bearing(bearing)/*.tilt(60)*/.build();
         CameraUpdate cu = CameraUpdateFactory.newCameraPosition(cameraPosition);
         mMap.animateCamera(cu);
 

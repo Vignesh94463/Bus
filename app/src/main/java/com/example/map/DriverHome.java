@@ -54,7 +54,7 @@ public class DriverHome extends AppCompatActivity {
     private String url ="https://auggbus.herokuapp.com/";
     private ArrayList<String> busNumber = new ArrayList<String>();
     public String[] countryNames = {"+ 91","+ 92"};
-
+    Loading loading = new Loading(DriverHome.this);
 
 
     @Override
@@ -62,10 +62,12 @@ public class DriverHome extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_driver_home);
 
+
         mspinnerBus = findViewById(R.id.spinnerBus);
 
 
         /*===========================Request for no of busses=============================================*/
+        loading.startLoading();
 
         OkHttpClient client = new OkHttpClient();
         okhttp3.Request request = new okhttp3.Request.Builder().url(url+"bus_details").build();
@@ -220,6 +222,7 @@ public class DriverHome extends AppCompatActivity {
                 mspinnerBus.setAdapter(new ArrayAdapter<String>(DriverHome.this, android.R.layout.simple_spinner_dropdown_item,busNumber));
             }
         });
+        loading.dismissDialog();    
 
     }
 
