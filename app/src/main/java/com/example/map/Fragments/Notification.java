@@ -23,18 +23,7 @@ public class Notification extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v=inflater.inflate(R.layout.fragment_notification,container,false);
-        button=(Button) v.findViewById(R.id.logoutButton);
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-//                Toast.makeText(getActivity(),"Work",Toast.LENGTH_LONG).show();
-//                Intent intent=new Intent(getActivity(), Dummy.class);
-//                startActivity(intent);
-                FirebaseAuth.getInstance().signOut();
-                Intent intent=new Intent(getActivity(), SendPhoneOtp.class);
-                startActivity(intent);
-            }
-        });
+
         return v;
 
 

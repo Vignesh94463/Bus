@@ -164,7 +164,7 @@ public class SendPhoneOtp extends AppCompatActivity {
 
 
 
-        getSupportActionBar().hide();
+//        getSupportActionBar().hide();
 
     }
 
