@@ -19,11 +19,14 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity android:name=".DriverDetailsActivity"></activity>
+        <activity android:name=".SchoolDetailsActivity" />
+        <activity android:name=".ProfileActivity" />
 
-        <service android:name=".MyFirebaseMessagingService"
+        <service
+            android:name=".MyFirebaseMessagingService"
             android:enabled="true"
-            android:exported="true"
-            >
+            android:exported="true">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
@@ -36,7 +39,7 @@
             android:name="com.google.firebase.messaging.default_notification_color"
             android:resource="@color/colorAccent" />
 
-        <activity android:name=".DriverHome"></activity>
+        <activity android:name=".DriverHome" />
         <activity android:name=".Dummy" />
         <activity android:name=".VerifyPhoneOtp" />
         <activity
