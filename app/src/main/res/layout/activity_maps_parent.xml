@@ -1,7 +1,6 @@
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
-        android:background="@drawable/appbackground"
         android:layout_height="match_parent">
     <LinearLayout
         android:layout_width="match_parent"
@@ -9,13 +8,14 @@
         android:layout_height="match_parent">
         <LinearLayout
             android:orientation="horizontal"
+            android:paddingBottom="30dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
             <ImageView
                 android:id="@+id/backButton"
                 android:layout_width="20dp"
                 android:layout_height="20dp"
-                android:src="@drawable/back"
+                android:src="@drawable/backarrow"
                 android:layout_alignParentLeft="true"
                 android:layout_marginLeft="10dp"
                 android:layout_marginTop="25dp"
@@ -29,8 +29,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="20dp"
-                    android:textColor="#fff"
-                    android:text="Profile"
+                    android:textColor="#000"
+                    android:text="Map"
                     android:textSize="25sp"/>
             </RelativeLayout>
         </LinearLayout>
@@ -44,13 +44,22 @@
             tools:context="com.example.map.MapsActivityParent" />
 
     </LinearLayout>
+    <RelativeLayout
+        android:layout_width="50dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="30dp"
+        android:layout_marginBottom="30dp"
+        android:background="@drawable/trackpositionbackground"
+        android:layout_height="50dp">
+        <ImageView
+            android:id="@+id/locIcon"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:src="@drawable/trackposition"/>
+    </RelativeLayout>
 
-    <ImageView
-        android:id="@+id/locIcon"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="100dp"
-        android:layout_marginLeft="100dp"
-        android:src="@drawable/ic_gps"/>
 
 </RelativeLayout>
