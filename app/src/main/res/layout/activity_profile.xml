@@ -78,6 +78,7 @@
                                     android:src="@drawable/phone"
                                     />
                                 <TextView
+                                    android:id="@+id/phone_no"
                                     android:layout_alignLeft="@+id/phone"
                                     android:layout_marginLeft="30dp"
                                     android:textSize="18sp"

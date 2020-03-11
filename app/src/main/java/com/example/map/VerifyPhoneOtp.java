@@ -84,6 +84,7 @@ public class VerifyPhoneOtp extends AppCompatActivity {
 
 
     private void startTimer() {
+
         mtimerText.setOnClickListener(null);
         mcountDownTimer = new CountDownTimer(mTimeLeft,1000) {
 

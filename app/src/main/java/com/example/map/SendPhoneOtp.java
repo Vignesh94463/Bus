@@ -110,12 +110,15 @@ public class SendPhoneOtp extends AppCompatActivity {
 
                                  userstatus = data.getString("is_driver");
                                  File path = Environment.getExternalStorageDirectory();
-                                 String filename = "Augbusfile.txt";
+                                 String filename = "profile.txt";
+                                 // creating file
                                  File file = new File(path,filename);
                                  FileWriter fileWriter = new FileWriter(file.getAbsoluteFile());
                                  BufferedWriter bufferedWriter=new BufferedWriter(fileWriter);
-                                 bufferedWriter.write(userstatus);
+                                 bufferedWriter.write(data.toString());//writing data
                                  bufferedWriter.close();
+
+
                                 // editText.setText(status.toString());
                                  String phoneNumber ="+"+code+number;
                                  Intent intent = new Intent(SendPhoneOtp.this,VerifyPhoneOtp.class);
@@ -170,23 +173,36 @@ public class SendPhoneOtp extends AppCompatActivity {
 
     @Override
     protected void onStart() {
+
         super.onStart();
         if(FirebaseAuth.getInstance().getCurrentUser() !=null){
             StringBuilder stringBuilder = new StringBuilder();
             try {
-               File textFile = new File(Environment.getExternalStorageDirectory(),"Augbusfile.txt");
+               File textFile = new File(Environment.getExternalStorageDirectory(),"profile.txt");
                FileInputStream fileInputStream = new FileInputStream(textFile);
+
+
+
                if (fileInputStream!=null){
                    InputStreamReader inputStreamReader = new InputStreamReader(fileInputStream);
                    BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+
+
                    String line = null;
                    while ((line=bufferedReader.readLine())!=null){
                        stringBuilder.append(line);
                    }
                    fileInputStream.close();
                }
-               String p=stringBuilder.toString();
-               String s = "false";
+                String profile_data=stringBuilder.toString();
+                try {
+                    JSONObject jsonObject=new JSONObject(profile_data);
+                    String p = jsonObject.getString("is_driver");
+                    System.out.println("");
+
+
+
+                String s = "false";
                 if (p.equals(s)) {
                     Intent intent = new Intent(this,TabBottomParent.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -198,6 +214,10 @@ public class SendPhoneOtp extends AppCompatActivity {
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
 
                     startActivity(intent);
+                }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+
                 }
                // Toast.makeText(SendPhoneOtp.this,"work : "+stringBuilder.toString(),Toast.LENGTH_LONG).show();
             }catch (IOException e){}
