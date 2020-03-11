@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -40,6 +41,7 @@ public class SendPhoneOtp extends AppCompatActivity {
 
     private Spinner spinner;
     private EditText editText;
+    private TextView wrongNoText;
     private String url = "https://auggbus.herokuapp.com/login/";
     String userstatus;
     String code;
@@ -50,6 +52,9 @@ public class SendPhoneOtp extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
+        wrongNoText = findViewById(R.id.wrongnumber);
+        wrongNoText.setVisibility(View.GONE);
 //loading
         final Loading loading = new Loading(SendPhoneOtp.this);
 //=========================spinner + 91
@@ -147,6 +152,8 @@ public class SendPhoneOtp extends AppCompatActivity {
                                      loading.dismissDialog();//stop loading
 //                                     editText.setText(response.body().string());
                                      Toast.makeText(SendPhoneOtp.this,"Phone Number not Regestered",Toast.LENGTH_LONG).show();
+                                     wrongNoText.setText("Invalid Mobile number");
+                                     wrongNoText.setVisibility(View.VISIBLE);
                                  }
                              });
 
@@ -155,7 +162,6 @@ public class SendPhoneOtp extends AppCompatActivity {
                      }
 
                  });
-
 
 
                  String phoneNumber ="+"+code+number;
