@@ -81,6 +81,15 @@
         app:layout_constraintStart_toStartOf="parent"
        />
 
-
-
+        <TextView
+            android:layout_marginTop="20dp"
+            android:id="@+id/resend"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="20sp"
+            android:text="Resend Code"
+            android:textColor="#5D3EA8"
+            android:layout_centerHorizontal="true"
+            android:layout_below="@+id/continueButton"
+        />
 </RelativeLayout>
