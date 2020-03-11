@@ -33,6 +33,13 @@ public class TabBottomParent extends AppCompatActivity {
       driverDetails=(CardView)findViewById(R.id.driverdetails);
       schoolDetails=(CardView)findViewById(R.id.schooldetails);
       trackBus=(CardView)findViewById(R.id.trackbus);
+      trackBus.setOnClickListener(new View.OnClickListener() {
+          @Override
+          public void onClick(View v) {
+              Intent intent =new Intent(TabBottomParent.this,MapsActivityParent.class);
+              startActivity(intent);
+          }
+      });
       driverDetails.setOnClickListener(new View.OnClickListener() {
           @Override
           public void onClick(View v) {

@@ -8,6 +8,7 @@ import androidx.fragment.app.FragmentActivity;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
+import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.os.Bundle;
@@ -40,7 +41,7 @@ public class MapsActivityParent extends FragmentActivity implements OnMapReadyCa
     boolean track = true;
     double LocationLat = 0;
     double LocationLan = 0;
-
+    ImageView backButton;
     @Override
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
@@ -50,6 +51,14 @@ public class MapsActivityParent extends FragmentActivity implements OnMapReadyCa
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
         gpsButton = findViewById(R.id.locIcon);
+        backButton=(ImageView)findViewById(R.id.backButton);
+        backButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MapsActivityParent.this,TabBottomParent.class);
+                startActivity(intent);
+            }
+        });
     }
 
 
