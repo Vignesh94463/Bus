@@ -14,7 +14,17 @@
         android:layout_height="118dp"
         android:layout_centerHorizontal="true"
         android:src="@drawable/appicon" />
-
+    <TextView
+        android:layout_below="@id/appicon"
+        android:id="@+id/wrongnumber"
+        android:layout_marginTop="10dp"
+        android:text="not registered"
+        android:textSize="14dp"
+        android:textStyle="bold"
+        android:textColor="#f51307"
+        android:layout_centerHorizontal="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
 
     <RelativeLayout
 
@@ -71,6 +81,15 @@
         app:layout_constraintStart_toStartOf="parent"
        />
 
-
-
+        <TextView
+            android:layout_marginTop="20dp"
+            android:id="@+id/resend"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="20sp"
+            android:text="Resend Code"
+            android:textColor="#5D3EA8"
+            android:layout_centerHorizontal="true"
+            android:layout_below="@+id/continueButton"
+        />
 </RelativeLayout>
