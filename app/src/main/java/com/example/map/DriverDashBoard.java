@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.os.Environment;
 import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -30,6 +31,9 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -37,7 +41,9 @@ import java.util.Map;
 
 import okhttp3.Call;
 import okhttp3.Callback;
+import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
+import okhttp3.RequestBody;
 
 public class DriverDashBoard extends AppCompatActivity {
     private RequestQueue mRequestQue;
@@ -48,14 +54,20 @@ public class DriverDashBoard extends AppCompatActivity {
     private String URL = "https://fcm.googleapis.com/fcm/send";
     private Spinner mspinnerBus;
     private String url ="https://auggbus.herokuapp.com/";
+    private String urlTrip = "https://auggbus.herokuapp.com/trip_start/";
     private ArrayList<String> busNumber = new ArrayList<String>();
     public String[] countryNames = {"+ 91","+ 92"};
+    public String currentBus;
+    private String driverPhone;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_driver_dash_board);
+
+        driverPhone= getIntent().getStringExtra("driverPhone");
+
 
 
         dialog=new Dialog(this);
@@ -102,8 +114,8 @@ public class DriverDashBoard extends AppCompatActivity {
                     @Override
                     public void onClick(View v) {
 
-                        Intent intent=new Intent(DriverDashBoard.this,MapsActivityDriver.class);
-                        startActivity(intent);
+//                        Intent intent=new Intent(DriverDashBoard.this,MapsActivityDriver.class);
+//                        startActivity(intent);
 
                         sendNotification();//push notification
 
@@ -157,7 +169,6 @@ public class DriverDashBoard extends AppCompatActivity {
                             busNumber.add("Bus"+Integer.toString(i));
 
                         }
-                        System.out.println("sasi1" + busNumber);
                         loading.dismissDialog();
                         updateSpinner();
 
@@ -194,11 +205,14 @@ public class DriverDashBoard extends AppCompatActivity {
 
     public void sendNotification(){
 
-        String currentBus = mspinnerBus.getSelectedItem().toString();
 
+        currentBus = mspinnerBus.getSelectedItem().toString();
+        updateTrip();
+
+        String message =" Started trip from  school";
 
         mRequestQue = Volley.newRequestQueue(this);
-        FirebaseMessaging.getInstance().subscribeToTopic(currentBus);
+//        FirebaseMessaging.getInstance().subscribeToTopic("Driver");
 
 
         JSONObject jason = new JSONObject();
@@ -207,7 +221,7 @@ public class DriverDashBoard extends AppCompatActivity {
             jason.put("to", "/topics/" + currentBus);
             JSONObject notificationObj = new JSONObject();
             notificationObj.put("title","Aug Bus");
-            notificationObj.put("body",currentBus+"Started trip from  school");
+            notificationObj.put("body",currentBus+message);
 
             jason.put("notification",notificationObj);
 
@@ -244,6 +258,73 @@ public class DriverDashBoard extends AppCompatActivity {
         }
         Toast toast = Toast.makeText(DriverDashBoard.this,"pappus",Toast.LENGTH_LONG);
         toast.show();
+
+
+    }
+    public void updateTrip(){
+        OkHttpClient client = new OkHttpClient();
+
+            MediaType MEDIA_TYPE = MediaType.parse("application/json");
+            JSONObject postdata = new JSONObject();
+            try {
+                postdata.put("mobile_number", driverPhone);
+                postdata.put("bus_number", Long.toString(mspinnerBus.getSelectedItemId()+1));
+                postdata.put("latitude", "12");
+                postdata.put("longitude", "12");
+
+            } catch(JSONException e){
+                e.printStackTrace();
+            }
+        System.out.println("sasi data"+postdata);
+
+        RequestBody body = RequestBody.create(MEDIA_TYPE, postdata.toString());
+            final okhttp3.Request request = new okhttp3.Request.Builder()
+                    .url(urlTrip)
+                    .post(body)
+                    .addHeader("Content-Type", "application/json")
+                    .build();
+
+    // callback for the http request
+            client.newCall(request).enqueue(new Callback() {
+                @Override
+                public void onFailure(Call call, IOException e) {
+
+                    e.printStackTrace();
+                }
+                @Override
+                public void onResponse(Call call, okhttp3.Response response) throws IOException {
+
+                    System.out.println("sasi"+response);
+
+                    if( response.isSuccessful()) {
+                        String myResponse = response.body().string();
+                        try {
+                            JSONObject jsonObject = new JSONObject(myResponse);
+                            JSONObject data = jsonObject.getJSONObject("data");
+                            String id = data.getString("id");
+
+                            System.out.println("sasi id "+id);
+
+
+                            Intent intent=new Intent(DriverDashBoard.this,MapsActivityDriver.class);
+                            intent.putExtra("id",id);
+                            intent.putExtra("busId",Long.toString(mspinnerBus.getSelectedItemId()+1));
+                            intent.putExtra("phoneNumber",driverPhone);
+
+
+                            startActivity(intent);
+
+
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+
+
+                }
+
+            });
 
 
     }

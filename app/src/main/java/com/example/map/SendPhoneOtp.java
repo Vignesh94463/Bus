@@ -116,6 +116,7 @@ public class SendPhoneOtp extends AppCompatActivity {
                                  JSONObject data = jsonObject.getJSONObject("data");
 
                                  userstatus = data.getString("is_driver");
+
                                  File path = Environment.getExternalStorageDirectory();
                                  String filename = "profile.txt";
                                  // creating file
@@ -207,6 +208,7 @@ public class SendPhoneOtp extends AppCompatActivity {
                     JSONObject jsonObject=new JSONObject(profile_data);
                     String driver = jsonObject.getString("is_driver");
                     String guardian = jsonObject.getString("is_guardian");
+                    String driverPhone = jsonObject.getString("phone");
 
                     System.out.println("");
 
@@ -214,7 +216,11 @@ public class SendPhoneOtp extends AppCompatActivity {
 
                 if (guardian.equals("true")) {
 
-                    FirebaseMessaging.getInstance().subscribeToTopic("Bus1");
+
+                    String busNo = jsonObject.getString("bus_id"); //getting bus no of guardian
+                    System.out.println("sasi"+busNo);
+
+                    FirebaseMessaging.getInstance().subscribeToTopic("Bus"+busNo);
 
                     Intent intent = new Intent(this,TabBottomParent.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -222,8 +228,14 @@ public class SendPhoneOtp extends AppCompatActivity {
                     startActivity(intent);
                 }
                 else  if (driver.equals("true")){
+
+//                    FirebaseMessaging.getInstance().subscribeToTopic("Driver");
+
+
                     Intent intent = new Intent(this,DriverDashBoard.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    intent.putExtra("driverPhone",driverPhone);
+
 
                     startActivity(intent);
                 }
