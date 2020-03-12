@@ -17,6 +17,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.android.volley.RequestQueue;
@@ -49,6 +50,7 @@ public class MapsActivityDriver extends FragmentActivity implements OnMapReadyCa
     GoogleApiClient mGoogleApiClient;
     Location mLastLocation;
     LocationRequest mLocationRequest;
+    ImageView backButton;
     //Button logoutButton;
 
     @Override
@@ -61,6 +63,14 @@ public class MapsActivityDriver extends FragmentActivity implements OnMapReadyCa
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+        backButton=(ImageView) findViewById(R.id.driverMapBackButton);
+        backButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent=new Intent(MapsActivityDriver.this,DriverDashBoard.class);
+                startActivity(intent);
+            }
+        });
 //        logoutButton=(Button)findViewById(R.id.logout);
 //        logoutButton.setOnClickListener(new View.OnClickListener() {
 //            @Override
