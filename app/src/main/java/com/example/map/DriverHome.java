@@ -4,17 +4,21 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 
+import android.app.Dialog;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -49,6 +53,9 @@ import okhttp3.OkHttpClient;
 public class DriverHome extends AppCompatActivity {
 
     private RequestQueue mRequestQue;
+    Dialog dialog;
+    ImageView closePopup;
+    Button btnAccept,startRide;
     private String URL = "https://fcm.googleapis.com/fcm/send";
     private Spinner mspinnerBus;
     private String url ="https://auggbus.herokuapp.com/";
@@ -64,8 +71,8 @@ public class DriverHome extends AppCompatActivity {
 
 
         mspinnerBus = findViewById(R.id.spinnerBus);
-
-
+        startRide=(Button)findViewById(R.id.startRide);
+        dialog=new Dialog(this);
         /*===========================Request for no of busses=============================================*/
         loading.startLoading();
 
@@ -107,15 +114,15 @@ public class DriverHome extends AppCompatActivity {
         FirebaseMessaging.getInstance().subscribeToTopic("news");
 
 
-        findViewById(R.id.startRide).setOnClickListener(new View.OnClickListener() {
+        startRide.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
 //                notification();
-                sendNotification();
+              //  sendNotification();
+                Toast.makeText(DriverHome.this,"work",Toast.LENGTH_LONG).show();
 
-
-//                Intent homeIntent = new Intent(DriverHome.this, MapsActivityDriver.class);
+////                Intent homeIntent = new Intent(DriverHome.this, MapsActivityDriver.class);
 //                startActivity(homeIntent);
 
 

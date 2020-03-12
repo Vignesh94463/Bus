@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_marginLeft="5dp"
+    android:gravity="center"
+    android:layout_marginRight="5dp">
+    <ImageView
+        android:id="@+id/closePopup"
+        android:layout_width="28dp"
+        android:layout_height="28dp"
+        android:src="@drawable/close"
+        android:layout_marginTop="7dp"
+        android:layout_marginRight="7dp"
+        android:elevation="5dp"
+        android:layout_alignParentRight="true"
+        />
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:cardCornerRadius="15dp"
+        app:cardBackgroundColor="#fff"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="35dp"
+                android:layout_marginBottom="35dp">
+                <TextView
+                    android:id="@+id/label1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textAlignment="center"
+                    android:textSize="25dp"
+                    android:textStyle="bold"
+                    android:fontFamily="sans-serif"
+                    android:textColor="#000"
+                    android:text="Select the bus"/>
+                <Spinner
+                    android:layout_marginTop="20dp"
+                    android:layout_below="@+id/label1"
+                    android:id="@+id/spinnerBus"
+                    android:layout_alignParentRight="true"
+                    android:layout_width="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_alignParentLeft="true"
+                    android:layout_height="40dp"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
+                    android:background="@drawable/busselectionbackground"
+                    android:textSize="20sp" />
+                <Button
+                    android:id="@+id/btnAccept"
+                    android:layout_width="200dp"
+                    android:layout_height="40dp"
+                    android:layout_marginTop="20dp"
+                    android:text="OK"
+                    android:layout_centerHorizontal="true"
+                    android:layout_below="@+id/spinnerBus"
+                    android:textColor="#fff"
+                    android:background="@drawable/button_background"
+                    />
+            </RelativeLayout>
+
+    </androidx.cardview.widget.CardView>
+</RelativeLayout>

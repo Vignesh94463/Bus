@@ -3,11 +3,16 @@ package com.example.map;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 
+import android.app.Dialog;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -37,18 +42,22 @@ import okhttp3.OkHttpClient;
 public class DriverDashBoard extends AppCompatActivity {
     private RequestQueue mRequestQue;
     CardView schoolDetails,profile;
+    Dialog dialog;
+    Button btnAccept,startRide;
+    ImageView closePopup;
     private String URL = "https://fcm.googleapis.com/fcm/send";
     private Spinner mspinnerBus;
     private String url ="https://auggbus.herokuapp.com/";
     private ArrayList<String> busNumber = new ArrayList<String>();
     public String[] countryNames = {"+ 91","+ 92"};
-    Loading loading = new Loading(DriverDashBoard.this);
+    Loading loading;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_driver_dash_board);
-
-        mspinnerBus = findViewById(R.id.spinnerBus);
+        dialog=new Dialog(this);
+       // loading.startLoading();
+        //mspinnerBus = findViewById(R.id.spinnerBus);
         schoolDetails=(CardView)findViewById(R.id.schooldetails);
         profile=(CardView)findViewById(R.id.profile);
         schoolDetails.setOnClickListener(new View.OnClickListener() {
@@ -66,40 +75,9 @@ public class DriverDashBoard extends AppCompatActivity {
             }
         });
         /*===========================Request for no of busses=============================================*/
-        loading.startLoading();
-
-        OkHttpClient client = new OkHttpClient();
-        okhttp3.Request request = new okhttp3.Request.Builder().url(url+"bus_details").build();
-        client.newCall(request).enqueue(new Callback() {
-            @Override
-            public void onFailure(Call call, IOException e) {
-
-            }
-
-            @Override
-            public void onResponse(Call call, okhttp3.Response response) throws IOException {
-
-                if(response.isSuccessful())
-                {
-                    String myResponse = response.body().string();
-                    try {
-                        JSONObject jsonObject = new JSONObject(myResponse);
-                        JSONArray data = jsonObject.getJSONArray("data");
-
-                        for(int i = 0; i<data.length();i++){
-                            busNumber.add("Bus "+Integer.toString(i));
-                        }
-                        System.out.println(busNumber);
-
-                    }catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                }
-                updateSpinner();
 
 
-            }
-        });
+
         /*================================================================================================*/
 
         mRequestQue = Volley.newRequestQueue(this);
@@ -111,8 +89,73 @@ public class DriverDashBoard extends AppCompatActivity {
             public void onClick(View view) {
 
 //                notification();
-                sendNotification();
+               // sendNotification();
+               //
+                loading = new Loading(DriverDashBoard.this);
+                loading.startLoading();
+                OkHttpClient client = new OkHttpClient();
+                okhttp3.Request request = new okhttp3.Request.Builder().url(url+"bus_details").build();
+                client.newCall(request).enqueue(new Callback() {
+                    @Override
+                    public void onFailure(Call call, IOException e) {
 
+                    }
+
+                    @Override
+                    public void onResponse(Call call, okhttp3.Response response) throws IOException {
+
+                        if(response.isSuccessful())
+                        {
+                            String myResponse = response.body().string();
+                            try {
+                                JSONObject jsonObject = new JSONObject(myResponse);
+                                JSONArray data = jsonObject.getJSONArray("data");
+
+                                for(int i = 0; i<data.length();i++){
+                                    busNumber.add("Bus "+Integer.toString(i));
+                                }
+                                System.out.println(busNumber);
+
+                            }catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                        updateSpinner();
+
+
+                    }
+                    public void updateSpinner(){
+
+                        System.out.println(busNumber);
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                mspinnerBus.setAdapter(new ArrayAdapter<String>(DriverDashBoard.this, android.R.layout.simple_spinner_dropdown_item,busNumber));
+                            }
+                        });
+                        loading.dismissDialog();
+
+                    }
+                });
+
+                dialog.setContentView(R.layout.custom_popup);
+                closePopup=(ImageView)dialog.findViewById(R.id.closePopup);
+                btnAccept = (Button)dialog.findViewById(R.id.btnAccept);
+                mspinnerBus=(Spinner)dialog.findViewById(R.id.spinnerBus);
+                closePopup.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        dialog.dismiss();
+                    }
+                });
+                btnAccept.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Toast.makeText(DriverDashBoard.this,"work",Toast.LENGTH_LONG).show();
+                    }
+                });
+                dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                dialog.show();
 
 //                Intent homeIntent = new Intent(DriverHome.this, MapsActivityDriver.class);
 //                startActivity(homeIntent);
@@ -212,18 +255,7 @@ public class DriverDashBoard extends AppCompatActivity {
 
 
     }
-    public void updateSpinner(){
 
-        System.out.println(busNumber);
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                mspinnerBus.setAdapter(new ArrayAdapter<String>(DriverDashBoard.this, android.R.layout.simple_spinner_dropdown_item,busNumber));
-            }
-        });
-        loading.dismissDialog();
-
-    }
 
 
 
