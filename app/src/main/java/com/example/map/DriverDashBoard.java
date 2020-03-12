@@ -50,98 +50,48 @@ public class DriverDashBoard extends AppCompatActivity {
     private String url ="https://auggbus.herokuapp.com/";
     private ArrayList<String> busNumber = new ArrayList<String>();
     public String[] countryNames = {"+ 91","+ 92"};
-    Loading loading;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_driver_dash_board);
+
+
         dialog=new Dialog(this);
-       // loading.startLoading();
-        //mspinnerBus = findViewById(R.id.spinnerBus);
+        dialog.setContentView(R.layout.custom_popup);
+        closePopup=(ImageView)dialog.findViewById(R.id.closePopup);
+        btnAccept = (Button)dialog.findViewById(R.id.btnAccept);
+        mspinnerBus=(Spinner)dialog.findViewById(R.id.spinnerBus);
+
+
         schoolDetails=(CardView)findViewById(R.id.schooldetails);
         profile=(CardView)findViewById(R.id.profile);
+
         schoolDetails.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent =new Intent(DriverDashBoard.this,DriverSchoolDetails.class);
+                Intent intent =new Intent(DriverDashBoard.this,SchoolDetailsActivity.class);
                 startActivity(intent);
             }
         });
         profile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent=new Intent(DriverDashBoard.this,DriverProfileActivity.class);
+                Intent intent=new Intent(DriverDashBoard.this,ProfileActivity.class);
                 startActivity(intent);
             }
         });
-        /*===========================Request for no of busses=============================================*/
-
-
-
-        /*================================================================================================*/
-
-        mRequestQue = Volley.newRequestQueue(this);
-        FirebaseMessaging.getInstance().subscribeToTopic("news");
 
 
         findViewById(R.id.startRide).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
+                getBusNumber();// addes the number os bus in  busNumber array
 //                notification();
-               // sendNotification();
-               //
-               // loading = new Loading(DriverDashBoard.this);
-                //loading.startLoading();
-                OkHttpClient client = new OkHttpClient();
-                okhttp3.Request request = new okhttp3.Request.Builder().url(url+"bus_details").build();
-                client.newCall(request).enqueue(new Callback() {
-                    @Override
-                    public void onFailure(Call call, IOException e) {
-
-                    }
-
-                    @Override
-                    public void onResponse(Call call, okhttp3.Response response) throws IOException {
-
-                        if(response.isSuccessful())
-                        {
-                            String myResponse = response.body().string();
-                            try {
-                                JSONObject jsonObject = new JSONObject(myResponse);
-                                JSONArray data = jsonObject.getJSONArray("data");
-
-                                for(int i = 0; i<data.length();i++){
-                                    busNumber.add("Bus "+Integer.toString(i));
-                                }
-                                System.out.println(busNumber);
-
-                            }catch (JSONException e) {
-                                e.printStackTrace();
-                            }
-                        }
-                        updateSpinner();
 
 
-                    }
-                    public void updateSpinner(){
-
-                        System.out.println(busNumber);
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                mspinnerBus.setAdapter(new ArrayAdapter<String>(DriverDashBoard.this, android.R.layout.simple_spinner_dropdown_item,busNumber));
-                            }
-                        });
-                       // loading.dismissDialog();
-
-                    }
-                });
-
-                dialog.setContentView(R.layout.custom_popup);
-                closePopup=(ImageView)dialog.findViewById(R.id.closePopup);
-                btnAccept = (Button)dialog.findViewById(R.id.btnAccept);
-                mspinnerBus=(Spinner)dialog.findViewById(R.id.spinnerBus);
                 closePopup.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -151,32 +101,151 @@ public class DriverDashBoard extends AppCompatActivity {
                 btnAccept.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        //Toast.makeText(DriverDashBoard.this,"work",Toast.LENGTH_LONG).show();
+
                         Intent intent=new Intent(DriverDashBoard.this,MapsActivityDriver.class);
                         startActivity(intent);
+
+                        sendNotification();//push notification
+
                     }
                 });
                 dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-                dialog.show();
-
-//                Intent homeIntent = new Intent(DriverHome.this, MapsActivityDriver.class);
-//                startActivity(homeIntent);
-
-
 
             }
         });
+
 
         findViewById(R.id.logoutDriver).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 FirebaseAuth.getInstance().signOut();
-//                Intent intent=new Intent(DriverHome.this, SendPhoneOtp.class);
-//                startActivity(intent);
+                Intent intent=new Intent(DriverDashBoard.this, SendPhoneOtp.class);
+                startActivity(intent);
 //                notification();
 
             }
         });
+    }
+
+
+    public void getBusNumber(){
+
+        final Loading loading = new Loading(DriverDashBoard.this);
+
+        loading.startLoading();
+
+        OkHttpClient client = new OkHttpClient();
+        okhttp3.Request request = new okhttp3.Request.Builder().url(url+"bus_details").build();
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+
+            }
+
+            @Override
+            public void onResponse(Call call, okhttp3.Response response) throws IOException {
+
+
+                if(response.isSuccessful())
+                {
+                    String myResponse = response.body().string();
+                    try {
+                        JSONObject jsonObject = new JSONObject(myResponse);
+                        JSONArray data = jsonObject.getJSONArray("data");
+
+                        for(int i = 1; i<=data.length();i++){
+                            busNumber.add("Bus"+Integer.toString(i));
+
+                        }
+                        System.out.println("sasi1" + busNumber);
+                        loading.dismissDialog();
+                        updateSpinner();
+
+
+                    runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        dialog.show();
+                    }
+                });
+
+
+
+                    }catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+                updateSpinner();
+
+
+            }
+
+            public void updateSpinner(){
+
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        mspinnerBus.setAdapter(new ArrayAdapter<String>(DriverDashBoard.this, android.R.layout.simple_spinner_dropdown_item,busNumber));
+                    }
+                });
+            }
+        });
+    }
+
+    public void sendNotification(){
+
+        String currentBus = mspinnerBus.getSelectedItem().toString();
+
+
+        mRequestQue = Volley.newRequestQueue(this);
+        FirebaseMessaging.getInstance().subscribeToTopic(currentBus);
+
+
+        JSONObject jason = new JSONObject();
+
+        try {
+            jason.put("to", "/topics/" + currentBus);
+            JSONObject notificationObj = new JSONObject();
+            notificationObj.put("title","Aug Bus");
+            notificationObj.put("body",currentBus+"Started trip from  school");
+
+            jason.put("notification",notificationObj);
+
+            JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, URL, jason,new Response.Listener<JSONObject>() {
+                        @Override
+                        public void onResponse(JSONObject response) {
+//                            Toast.makeText(DriverDashBoard.this,"message send"+response,Toast.LENGTH_LONG).show();
+
+                        }
+                    }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    Log.d("MUR", "onError: "+error.networkResponse);
+//                    Toast.makeText(DriverDashBoard.this,"error",Toast.LENGTH_LONG).show();
+
+                }
+            }
+            ){
+                @Override
+                public Map<String, String> getHeaders() throws AuthFailureError {
+//                    return super.getHeaders();
+                    Map<String,String> header = new HashMap<>();
+                    header.put("content-type","application/json");
+                    header.put("authorization","key=AIzaSyBAH7N6bkdVT3Xs6WPjhXkxV7j3dUCS-w8");
+                    return header;
+
+                }
+            };
+
+            mRequestQue.add(request);
+
+        }catch (JSONException e){
+            e.printStackTrace();
+        }
+        Toast toast = Toast.makeText(DriverDashBoard.this,"pappus",Toast.LENGTH_LONG);
+        toast.show();
+
+
     }
     //    public void notification(){
 //
@@ -203,60 +272,7 @@ public class DriverDashBoard extends AppCompatActivity {
 //        Toast toast = Toast.makeText(DriverHome.this,"pappus",Toast.LENGTH_LONG);
 //        toast.show();
 //    }
-    public void sendNotification(){
 
-        JSONObject jason = new JSONObject();
-        try {
-            jason.put("to", "/topics/" + "news");
-            JSONObject notificationObj = new JSONObject();
-            notificationObj.put("title","hhhh");
-            notificationObj.put("body","anybody");
-
-            JSONObject extraData = new JSONObject();
-            extraData.put("brandId","puma");
-            extraData.put("category","Shoes");
-
-            jason.put("notification",notificationObj);
-            jason.put("data",extraData);
-
-
-            JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, URL, jason,
-                    new Response.Listener<JSONObject>() {
-                        @Override
-                        public void onResponse(JSONObject response) {
-                            Toast.makeText(DriverDashBoard.this,"message send"+response,Toast.LENGTH_LONG).show();
-
-                        }
-                    }, new Response.ErrorListener() {
-                @Override
-                public void onErrorResponse(VolleyError error) {
-                    Log.d("MUR", "onError: "+error.networkResponse);
-                    Toast.makeText(DriverDashBoard.this,"error",Toast.LENGTH_LONG).show();
-
-                }
-            }
-            ){
-                @Override
-                public Map<String, String> getHeaders() throws AuthFailureError {
-//                    return super.getHeaders();
-                    Map<String,String> header = new HashMap<>();
-                    header.put("content-type","application/json");
-                    header.put("authorization","key=AIzaSyBAH7N6bkdVT3Xs6WPjhXkxV7j3dUCS-w8");
-                    return header;
-
-                }
-            };
-
-            mRequestQue.add(request);
-
-        }catch (JSONException e){
-            e.printStackTrace();
-        }
-        Toast toast = Toast.makeText(DriverDashBoard.this,"pappus",Toast.LENGTH_LONG);
-        toast.show();
-
-
-    }
 
 
 
