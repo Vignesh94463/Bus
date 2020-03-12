@@ -19,7 +19,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".DriverDashBoard"></activity>
+        <activity android:name=".DriverSchoolDetails"></activity>
+        <activity android:name=".DriverProfileActivity" />
+        <activity android:name=".DriverDashBoard" />
         <activity android:name=".DriverDetailsActivity" />
         <activity android:name=".SchoolDetailsActivity" />
         <activity android:name=".ProfileActivity" />

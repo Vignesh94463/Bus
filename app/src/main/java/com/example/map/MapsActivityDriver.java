@@ -71,15 +71,15 @@ public class MapsActivityDriver extends FragmentActivity implements OnMapReadyCa
 //                startActivity(intent);
 //            }
 //        });
-        findViewById(R.id.stopTripButton).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                onStopButton();
-                Intent DriverIntent = new Intent(MapsActivityDriver.this,DriverHome.class);
-                startActivity(DriverIntent);
-
-            }
-        });
+//        findViewById(R.id.stopTripButton).setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                onStopButton();
+//                Intent DriverIntent = new Intent(MapsActivityDriver.this,DriverDashBoard.class);
+//                startActivity(DriverIntent);
+//
+//            }
+//        });
     }
 
     @Override
@@ -119,15 +119,16 @@ public class MapsActivityDriver extends FragmentActivity implements OnMapReadyCa
     @Override
     public void onLocationChanged(Location location) {
 
-        int bearing = (int) mMap.getMyLocation().getBearing();
+
+//        int bearing = (int) mMap.getMyLocation().getBearing();
         mLastLocation = location;
         LatLng latLng = new LatLng(location.getLatitude(),location.getLongitude());
 //        mMap.animateCamera(CameraUpdateFactory.newLatLng(latLng));
 //        mMap.animateCamera(CameraUpdateFactory.zoomTo(13));
 //        mMap.animateCamera(CameraUpdateFactory.zoomIn());
-        CameraPosition cameraPosition = new CameraPosition.Builder().target(latLng).zoom(13f).bearing(bearing)/*.tilt(60)*/.build();
+        CameraPosition cameraPosition = new CameraPosition.Builder().target(latLng).zoom(13f).bearing(0)/*.tilt(60)*/.build();
         CameraUpdate cu = CameraUpdateFactory.newCameraPosition(cameraPosition);
-        mMap.animateCamera(cu);
+//        mMap.animateCamera(cu);
 
 
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Bus1");

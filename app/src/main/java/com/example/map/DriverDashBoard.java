@@ -63,14 +63,14 @@ public class DriverDashBoard extends AppCompatActivity {
         schoolDetails.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent =new Intent(DriverDashBoard.this,SchoolDetailsActivity.class);
+                Intent intent =new Intent(DriverDashBoard.this,DriverSchoolDetails.class);
                 startActivity(intent);
             }
         });
         profile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent=new Intent(DriverDashBoard.this,ProfileActivity.class);
+                Intent intent=new Intent(DriverDashBoard.this,DriverProfileActivity.class);
                 startActivity(intent);
             }
         });
@@ -91,8 +91,8 @@ public class DriverDashBoard extends AppCompatActivity {
 //                notification();
                // sendNotification();
                //
-                loading = new Loading(DriverDashBoard.this);
-                loading.startLoading();
+               // loading = new Loading(DriverDashBoard.this);
+                //loading.startLoading();
                 OkHttpClient client = new OkHttpClient();
                 okhttp3.Request request = new okhttp3.Request.Builder().url(url+"bus_details").build();
                 client.newCall(request).enqueue(new Callback() {
@@ -133,7 +133,7 @@ public class DriverDashBoard extends AppCompatActivity {
                                 mspinnerBus.setAdapter(new ArrayAdapter<String>(DriverDashBoard.this, android.R.layout.simple_spinner_dropdown_item,busNumber));
                             }
                         });
-                        loading.dismissDialog();
+                       // loading.dismissDialog();
 
                     }
                 });
@@ -151,7 +151,9 @@ public class DriverDashBoard extends AppCompatActivity {
                 btnAccept.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Toast.makeText(DriverDashBoard.this,"work",Toast.LENGTH_LONG).show();
+                        //Toast.makeText(DriverDashBoard.this,"work",Toast.LENGTH_LONG).show();
+                        Intent intent=new Intent(DriverDashBoard.this,MapsActivityDriver.class);
+                        startActivity(intent);
                     }
                 });
                 dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
