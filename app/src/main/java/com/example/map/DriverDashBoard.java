@@ -55,7 +55,7 @@ public class DriverDashBoard extends AppCompatActivity {
 
     CardView schoolDetailsButton,driverProfileButton;
     Dialog dialog;
-    Button btnAccept,startRide;
+    Button btnAccept,startTrip;
     ImageView closePopup;
     private Spinner mspinnerBus;
 
@@ -107,8 +107,6 @@ public class DriverDashBoard extends AppCompatActivity {
             public void onClick(View view) {
 
                 getBusNumber();// addes the number os bus in  busNumber array
-//                notification();
-
 
                 closePopup.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -159,7 +157,6 @@ public class DriverDashBoard extends AppCompatActivity {
             public void onFailure(Call call, IOException e) {
 
             }
-
             @Override
             public void onResponse(Call call, okhttp3.Response response) throws IOException {
 
