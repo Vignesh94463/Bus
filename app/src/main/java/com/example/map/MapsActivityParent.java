@@ -123,12 +123,18 @@ public class MapsActivityParent extends FragmentActivity implements OnMapReadyCa
 
                     mDriverMarker = mMap.addMarker(new MarkerOptions().position(driverLatLang).title("Bus 1").icon(BitmapDescriptorFactory.fromResource(R.drawable.busgps2)));
                     if (track == true) {
+                        gpsButton.setImageResource(R.drawable.trackposition);
+
                         CameraPosition cameraPosition = new CameraPosition.Builder().target(driverLatLang).zoom(14f).bearing(45)/*.tilt(60)*/.build();
                         CameraUpdate cu = CameraUpdateFactory.newCameraPosition(cameraPosition);
                         mMap.animateCamera(cu);
 
 //                        mMap.moveCamera(CameraUpdateFactory.newLatLng(driverLatLang));
 //                        mMap.animateCamera(CameraUpdateFactory.zoomTo(15));
+                    }else{
+                        gpsButton.setImageResource(R.drawable.trackposition2);
+
+
                     }
 
 //                    Toast toast = Toast.makeText(MapsActivityParent.this,driverLatLang.toString(),Toast.LENGTH_LONG);

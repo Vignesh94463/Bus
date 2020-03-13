@@ -46,15 +46,19 @@ import okhttp3.OkHttpClient;
 import okhttp3.RequestBody;
 
 public class DriverDashBoard extends AppCompatActivity {
+
+    private String fireBaseURL = "https://fcm.googleapis.com/fcm/send";
+    private String urlBus ="https://auggbus.herokuapp.com/";
+    private String urlTrip = "https://auggbus.herokuapp.com/trip_start/";
+
     private RequestQueue mRequestQue;
-    CardView schoolDetails,profile;
+
+    CardView schoolDetailsButton,driverProfileButton;
     Dialog dialog;
     Button btnAccept,startRide;
     ImageView closePopup;
-    private String URL = "https://fcm.googleapis.com/fcm/send";
     private Spinner mspinnerBus;
-    private String url ="https://auggbus.herokuapp.com/";
-    private String urlTrip = "https://auggbus.herokuapp.com/trip_start/";
+
     private ArrayList<String> busNumber = new ArrayList<String>();
     public String[] countryNames = {"+ 91","+ 92"};
     public String currentBus;
@@ -77,20 +81,22 @@ public class DriverDashBoard extends AppCompatActivity {
         mspinnerBus=(Spinner)dialog.findViewById(R.id.spinnerBus);
 
 
-        schoolDetails=(CardView)findViewById(R.id.schooldetails);
-        profile=(CardView)findViewById(R.id.profile);
+        schoolDetailsButton=(CardView)findViewById(R.id.schooldetails);
+        driverProfileButton=(CardView)findViewById(R.id.profile);
 
-        schoolDetails.setOnClickListener(new View.OnClickListener() {
+        schoolDetailsButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent =new Intent(DriverDashBoard.this,SchoolDetailsActivity.class);
+
+                Intent intent =new Intent(DriverDashBoard.this,DriverSchoolDetails.class);
                 startActivity(intent);
             }
         });
-        profile.setOnClickListener(new View.OnClickListener() {
+        driverProfileButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent=new Intent(DriverDashBoard.this,ProfileActivity.class);
+
+                Intent intent=new Intent(DriverDashBoard.this,DriverProfileActivity.class);
                 startActivity(intent);
             }
         });
@@ -147,7 +153,7 @@ public class DriverDashBoard extends AppCompatActivity {
         loading.startLoading();
 
         OkHttpClient client = new OkHttpClient();
-        okhttp3.Request request = new okhttp3.Request.Builder().url(url+"bus_details").build();
+        okhttp3.Request request = new okhttp3.Request.Builder().url(urlBus+"bus_details").build();
         client.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
@@ -225,7 +231,7 @@ public class DriverDashBoard extends AppCompatActivity {
 
             jason.put("notification",notificationObj);
 
-            JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, URL, jason,new Response.Listener<JSONObject>() {
+            JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, fireBaseURL, jason,new Response.Listener<JSONObject>() {
                         @Override
                         public void onResponse(JSONObject response) {
 //                            Toast.makeText(DriverDashBoard.this,"message send"+response,Toast.LENGTH_LONG).show();

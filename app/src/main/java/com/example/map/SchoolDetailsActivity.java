@@ -14,11 +14,13 @@ public class SchoolDetailsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_school_details);
         backButton=(ImageView)findViewById(R.id.backButton);
+
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(SchoolDetailsActivity.this,TabBottomParent.class);
+                Intent intent = new Intent(SchoolDetailsActivity.this,DriverDashBoard.class);
                 startActivity(intent);
+                finish();
             }
         });
     }

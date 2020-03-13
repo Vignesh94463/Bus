@@ -41,14 +41,15 @@ import static com.example.map.CountryData.countryaNames;
 
 public class SendPhoneOtp extends AppCompatActivity {
 
-    private Spinner spinner;
+    private Spinner spinnerCountryCode;
     private EditText editText;
     private TextView wrongNoText;
     private String url = "https://auggbus.herokuapp.com/login/";
-    String userstatus;
+    String userStatus;
     String code;
-    String number;
+    String mobileNumber;
     SharedPreferences sharedpreferences;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,11 +58,13 @@ public class SendPhoneOtp extends AppCompatActivity {
 
         wrongNoText = findViewById(R.id.wrongnumber);
         wrongNoText.setVisibility(View.GONE);
-//loading
+
+//loading intalization
         final Loading loading = new Loading(SendPhoneOtp.this);
+
 //=========================spinner + 91
-        spinner = findViewById(R.id.spinnerCountries);
-        spinner.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item,countryaNames));
+        spinnerCountryCode = findViewById(R.id.spinnerCountries);
+        spinnerCountryCode.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item,countryaNames));
 
         editText = findViewById(R.id.phoneOtp);
         findViewById(R.id.continueButton).setOnClickListener(new View.OnClickListener() {
@@ -69,114 +72,128 @@ public class SendPhoneOtp extends AppCompatActivity {
 
             public void onClick(View view) {
 
-                 code = countryCode[spinner.getSelectedItemPosition()];
-                 number = editText.getText().toString().trim();// get number from text view
+                 code = countryCode[spinnerCountryCode.getSelectedItemPosition()];
+                mobileNumber = editText.getText().toString().trim();// get number from text view
 
-                 if(number.isEmpty()||number.length()<10){
+                 if(mobileNumber.isEmpty()||mobileNumber.length()<10){
+
                      editText.setError("Valid Number is required");
                      editText.requestFocus();
                      return;
                  }
-                 else{
-                     loading.startLoading();
-                 }
+                 else {
 
-                 OkHttpClient client = new OkHttpClient();
-//                 Request request = new Request.Builder().url(url+number).build(); code for get request
+                     loading.startLoading();//start loading
+
+                     OkHttpClient client = new OkHttpClient();
 //post methode request
-                 MediaType MEDIA_TYPE = MediaType.parse("application/json");
-                 JSONObject postdata = new JSONObject();
-                 try {
-                    postdata.put("mobile_number", number);
+                     MediaType MEDIA_TYPE = MediaType.parse("application/json");
+                     JSONObject postdata = new JSONObject();
+                     try {
+                         postdata.put("mobile_number", mobileNumber);
 
-                 } catch(JSONException e){
-                    e.printStackTrace();
-                 }
-                 RequestBody body = RequestBody.create(MEDIA_TYPE, postdata.toString());
-                 final Request request = new Request.Builder()
-                        .url(url)
-                        .post(body)
-                        .addHeader("Content-Type", "application/json")
-                        .build();
+                     } catch (JSONException e) {
+                         e.printStackTrace();
+                     }
+
+                     RequestBody body = RequestBody.create(MEDIA_TYPE, postdata.toString());
+                     final Request request = new Request.Builder()
+                             .url(url)
+                             .post(body)
+                             .addHeader("Content-Type", "application/json")
+                             .build();
 
 // callback for the http request
-                 client.newCall(request).enqueue(new Callback() {
-                     @Override
-                     public void onFailure(Call call, IOException e) {
-                         e.printStackTrace();
 
-                     }
-                     @Override
-                     public void onResponse(Call call, Response response) throws IOException {
+                     client.newCall(request).enqueue(new Callback() {
+                         @Override
+                         public void onFailure(Call call, IOException e) {
+                             e.printStackTrace();
 
-                         if( response.isSuccessful()){
-                             String myResponse = response.body().string();
-                             try {
-                                 JSONObject jsonObject=new JSONObject(myResponse);
-                                 JSONObject data = jsonObject.getJSONObject("data");
-
-                                 userstatus = data.getString("is_driver");
-
-                                 File path = Environment.getExternalStorageDirectory();
-                                 String filename = "profile.txt";
-                                 // creating file
-                                 File file = new File(path,filename);
-                                 FileWriter fileWriter = new FileWriter(file.getAbsoluteFile());
-                                 BufferedWriter bufferedWriter=new BufferedWriter(fileWriter);
-                                 bufferedWriter.write(data.toString());//writing data
-                                 bufferedWriter.close();
-
-
-                                // editText.setText(status.toString());
-                                 String phoneNumber ="+"+code+number;
-                                 Intent intent = new Intent(SendPhoneOtp.this,VerifyPhoneOtp.class);
-                                 intent.putExtra("phonenumber",phoneNumber);
-                                 intent.putExtra("userstatus",userstatus);
-
-                                 loading.dismissDialog();//stop loading
-                                 startActivity(intent);
-
-                             } catch (JSONException e) {
-                                 e.printStackTrace();
-                             }
+                         }
+                         @Override
+                         public void onResponse(Call call, Response response) throws IOException {
 
 
 
-                            // Toast.makeText(SendPhoneOtp.this,"work"+phoneNumber,Toast.LENGTH_LONG).show();
-                 //Intent intent = new Intent(SendPhoneOtp.this,VerifyPhoneOtp.class);
-                // intent.putExtra("phonenumber",phoneNumber);
-                // startActivity(intent);
+                             if (response.isSuccessful()) {
+
+                                 String myResponse = response.body().string();
+                                 try {
+                                     JSONObject jsonObject = new JSONObject(myResponse);
+                                     JSONObject data = jsonObject.getJSONObject("data");
+
+                                     //checking user is driver or guardian
 
 
-                         }else{
-                             SendPhoneOtp.this.runOnUiThread(new Runnable() {
-                                 @Override
-                                 public void run() {
+                                     if(data.getString("is_driver")=="true"){
+
+                                         userStatus="driver";
+
+                                     }else if(data.getString("is_guardian")=="true"){
+
+                                         userStatus="guardian";
+
+                                     }
+
+
+                                     File path = Environment.getExternalStorageDirectory();
+                                     String filename = "profile.txt";
+                                     // creating file
+                                     File file = new File(path, filename);
+                                     FileWriter fileWriter = new FileWriter(file.getAbsoluteFile());
+                                     BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
+                                     bufferedWriter.write(data.toString());//writing data
+                                     bufferedWriter.close();
+
+
+                                     // editText.setText(status.toString());
+                                     String phoneNumberWithCOde = "+" + code + mobileNumber;
+
+                                     Intent intent = new Intent(SendPhoneOtp.this, VerifyPhoneOtp.class);
+
+                                     intent.putExtra("mobileNumber", phoneNumberWithCOde);
+                                     intent.putExtra("userStatus", userStatus);
+
                                      loading.dismissDialog();//stop loading
-//                                     editText.setText(response.body().string());
-                                     Toast.makeText(SendPhoneOtp.this,"Phone Number not Regestered",Toast.LENGTH_LONG).show();
-                                     wrongNoText.setText("Invalid Mobile number");
-                                     wrongNoText.setVisibility(View.VISIBLE);
+                                     startActivity(intent);
+
+                                 } catch (JSONException e) {
+                                     e.printStackTrace();
                                  }
-                             });
+
+
+                                 // Toast.makeText(SendPhoneOtp.this,"work"+phoneNumber,Toast.LENGTH_LONG).show();
+                                 //Intent intent = new Intent(SendPhoneOtp.this,VerifyPhoneOtp.class);
+                                 // intent.putExtra("phonenumber",phoneNumber);
+                                 // startActivity(intent);
+
+                                 // Response Failure
+                             } else {
+
+                                 SendPhoneOtp.this.runOnUiThread(new Runnable() {
+                                     @Override
+                                     public void run() {
+
+                                         loading.dismissDialog();//stop loading
+                                         Toast.makeText(SendPhoneOtp.this, "Phone Number not Regestered", Toast.LENGTH_LONG).show();
+
+                                         wrongNoText.setText("Invalid Mobile number");
+                                         wrongNoText.setVisibility(View.VISIBLE);
+
+                                     }
+                                 });
+
+                             }
 
                          }
 
-                     }
+                     });
 
-                 });
-
-
-                 String phoneNumber ="+"+code+number;
-//                 Intent intent = new Intent(SendPhoneOtp.this,VerifyPhoneOtp.class);
-//                 intent.putExtra("phonenumber",phoneNumber);
-//                 startActivity(intent);
+                 }
             }
         });
 
-
-
-//        getSupportActionBar().hide();
 
     }
 
@@ -189,7 +206,6 @@ public class SendPhoneOtp extends AppCompatActivity {
             try {
                File textFile = new File(Environment.getExternalStorageDirectory(),"profile.txt");
                FileInputStream fileInputStream = new FileInputStream(textFile);
-
 
 
                if (fileInputStream!=null){
@@ -206,6 +222,7 @@ public class SendPhoneOtp extends AppCompatActivity {
                 String profile_data=stringBuilder.toString();
                 try {
                     JSONObject jsonObject=new JSONObject(profile_data);
+
                     String driver = jsonObject.getString("is_driver");
                     String guardian = jsonObject.getString("is_guardian");
                     String driverPhone = jsonObject.getString("phone");
@@ -218,23 +235,22 @@ public class SendPhoneOtp extends AppCompatActivity {
 
 
                     String busNo = jsonObject.getString("bus_id"); //getting bus no of guardian
-                    System.out.println("sasi"+busNo);
 
                     FirebaseMessaging.getInstance().subscribeToTopic("Bus"+busNo);
 
                     Intent intent = new Intent(this,TabBottomParent.class);
-                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+//                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
 
                     startActivity(intent);
                 }
+
                 else  if (driver.equals("true")){
 
 //                    FirebaseMessaging.getInstance().subscribeToTopic("Driver");
 
-
                     Intent intent = new Intent(this,DriverDashBoard.class);
-                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                    intent.putExtra("driverPhone",driverPhone);
+//                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    intent.putExtra("driverMobileNo",driverPhone);
 
 
                     startActivity(intent);

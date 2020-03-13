@@ -15,12 +15,19 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
+
+import android.util.Log;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
 import com.android.volley.RequestQueue;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.firebase.geofire.GeoFire;
 import com.firebase.geofire.GeoLocation;
@@ -40,22 +47,49 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.OkHttpClient;
+import okhttp3.Response;
 
 
 public class MapsActivityDriver extends FragmentActivity implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks,GoogleApiClient.OnConnectionFailedListener, com.google.android.gms.location.LocationListener {
 
     private GoogleMap mMap;
+    private RequestQueue mRequestQue;
+
     GoogleApiClient mGoogleApiClient;
     Location mLastLocation;
     LocationRequest mLocationRequest;
     ImageView backButton;
+    String tripStopUrl = "https://auggbus.herokuapp.com/trip_stop/";
+    private String URL = "https://fcm.googleapis.com/fcm/send";
+
+    private  String tripId;
+    private  String busId;
+    private  String driverPhone;
+
     //Button logoutButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        tripId =getIntent().getStringExtra("id");
+        busId=getIntent().getStringExtra("busId");
+        driverPhone=getIntent().getStringExtra("phoneNumber");
+
+
+
 
 
         setContentView(R.layout.activity_maps_driver);
@@ -81,15 +115,39 @@ public class MapsActivityDriver extends FragmentActivity implements OnMapReadyCa
 //                startActivity(intent);
 //            }
 //        });
-//        findViewById(R.id.stopTripButton).setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                onStopButton();
-//                Intent DriverIntent = new Intent(MapsActivityDriver.this,DriverDashBoard.class);
-//                startActivity(DriverIntent);
-//
-//            }
-//        });
+        findViewById(R.id.stopTripButton).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onStopButton();
+
+
+                OkHttpClient client = new OkHttpClient();
+                final okhttp3.Request request = new okhttp3.Request.Builder().url(tripStopUrl+tripId).build();
+
+                client.newCall(request).enqueue(new Callback() {
+                    @Override
+                    public void onFailure(Call call, IOException e) {
+
+
+                    }
+
+                    @Override
+                    public void onResponse(Call call, Response response) throws IOException {
+                        sendNotification();
+
+                        Intent intent = new Intent(MapsActivityDriver.this,DriverDashBoard.class);
+                        intent.putExtra("driverPhone",driverPhone);
+                        startActivity(intent);
+                        finish();
+
+
+                    }
+                });
+
+
+
+                }
+        });
     }
 
     @Override
@@ -112,8 +170,8 @@ public class MapsActivityDriver extends FragmentActivity implements OnMapReadyCa
 //                    longitude = location.getLongitude();
 //                    latitude = location.getLatitude();
 //                    LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
-                    Toast toast = Toast.makeText(MapsActivityDriver.this,"sasi",Toast.LENGTH_LONG);
-                    toast.show();
+//                    Toast toast = Toast.makeText(MapsActivityDriver.this,"sasi",Toast.LENGTH_LONG);
+//                    toast.show();
                 }
                 return false;
             }
@@ -130,15 +188,15 @@ public class MapsActivityDriver extends FragmentActivity implements OnMapReadyCa
     public void onLocationChanged(Location location) {
 
 
-//        int bearing = (int) mMap.getMyLocation().getBearing();
+        float bearing = (float) location.getBearing();
         mLastLocation = location;
         LatLng latLng = new LatLng(location.getLatitude(),location.getLongitude());
 //        mMap.animateCamera(CameraUpdateFactory.newLatLng(latLng));
 //        mMap.animateCamera(CameraUpdateFactory.zoomTo(13));
 //        mMap.animateCamera(CameraUpdateFactory.zoomIn());
-        CameraPosition cameraPosition = new CameraPosition.Builder().target(latLng).zoom(13f).bearing(0)/*.tilt(60)*/.build();
+        CameraPosition cameraPosition = new CameraPosition.Builder().target(latLng).zoom(13f).bearing(bearing)/*.tilt(60)*/.build();
         CameraUpdate cu = CameraUpdateFactory.newCameraPosition(cameraPosition);
-//        mMap.animateCamera(cu);
+        mMap.animateCamera(cu);
 
 
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Bus1");
@@ -210,6 +268,59 @@ public class MapsActivityDriver extends FragmentActivity implements OnMapReadyCa
 
 
     }
+
+    public void sendNotification(){
+
+        String message =" trip stopped";
+        mRequestQue = Volley.newRequestQueue(this);
+//        FirebaseMessaging.getInstance().subscribeToTopic("Driver");
+
+
+        JSONObject jason = new JSONObject();
+
+        try {
+            jason.put("to", "/topics/" + "Bus"+busId);
+            JSONObject notificationObj = new JSONObject();
+            notificationObj.put("title","Aug Bus");
+            notificationObj.put("body","Bus"+busId+message);
+
+            jason.put("notification",notificationObj);
+
+            JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, URL, jason,new com.android.volley.Response.Listener<JSONObject>() {
+                @Override
+                public void onResponse(JSONObject response) {
+//                            Toast.makeText(DriverDashBoard.this,"message send"+response,Toast.LENGTH_LONG).show();
+
+                }
+            }, new com.android.volley.Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    Log.d("MUR", "onError: "+error.networkResponse);
+//                    Toast.makeText(DriverDashBoard.this,"error",Toast.LENGTH_LONG).show();
+
+                }
+            }
+            ){
+                @Override
+                public Map<String, String> getHeaders() throws AuthFailureError {
+//                    return super.getHeaders();
+                    Map<String,String> header = new HashMap<>();
+                    header.put("content-type","application/json");
+                    header.put("authorization","key=AIzaSyBAH7N6bkdVT3Xs6WPjhXkxV7j3dUCS-w8");
+                    return header;
+
+                }
+            };
+
+            mRequestQue.add(request);
+
+        }catch (JSONException e){
+            e.printStackTrace();
+        }
+
+
+    }
+
 
 
 }

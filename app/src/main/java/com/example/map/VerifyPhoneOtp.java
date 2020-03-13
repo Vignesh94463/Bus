@@ -30,13 +30,13 @@ import java.util.concurrent.TimeUnit;
 public class VerifyPhoneOtp extends AppCompatActivity {
     private String verificationId;
     private FirebaseAuth mAuth;
-    private EditText editText;
+    private EditText otpTextBox;
 
-    private TextView mtimerText;
+    private TextView resendTimerText;
     private static  final long Start_Time = 60000;
     private CountDownTimer mcountDownTimer;
-    private boolean mTimerRunning;
-    private  String phonenumber,userstatus;
+    private boolean resendTimerRunning;
+    private  String mobileNumber,userStatus;
 
     private long mTimeLeft = Start_Time;
     ImageView imageView;
@@ -47,10 +47,10 @@ public class VerifyPhoneOtp extends AppCompatActivity {
         setContentView(R.layout.activity_verify_phone_otp);
 
 
-
-        mtimerText = findViewById(R.id.timerText);
+        resendTimerText = findViewById(R.id.timerText);
         startTimer();
         imageView=(ImageView)findViewById(R.id.appicon);
+
         imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -59,21 +59,25 @@ public class VerifyPhoneOtp extends AppCompatActivity {
                 Toast.makeText(VerifyPhoneOtp.this,"work",Toast.LENGTH_LONG).show();
             }
         });
+
         mAuth = FirebaseAuth.getInstance();
-        editText = findViewById(R.id.enterOtp);
-        phonenumber = getIntent().getStringExtra("phonenumber");
+        otpTextBox = findViewById(R.id.enterOtp);
+        mobileNumber = getIntent().getStringExtra("mobileNumber");
 
-        userstatus=getIntent().getStringExtra("userstatus");
+        userStatus=getIntent().getStringExtra("userStatus");
 
-        sendVerificationCode(phonenumber);
+        sendVerificationCode(mobileNumber);
 
         findViewById(R.id.verifyButton).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String code = editText.getText().toString().trim();
+
+                String code = otpTextBox.getText().toString().trim();
+
                 if(code.isEmpty() || code.length()<6){
-                    editText.setError("enter code....");
-                    editText.requestFocus();
+
+                    otpTextBox.setError("enter code....");
+                    otpTextBox.requestFocus();
                     return;
                 }
                 verifyCode(code);
@@ -85,7 +89,7 @@ public class VerifyPhoneOtp extends AppCompatActivity {
 
     private void startTimer() {
 
-        mtimerText.setOnClickListener(null);
+        resendTimerText.setOnClickListener(null);
         mcountDownTimer = new CountDownTimer(mTimeLeft,1000) {
 
             @Override
@@ -98,14 +102,14 @@ public class VerifyPhoneOtp extends AppCompatActivity {
             @Override
             public void onFinish() {
 
-                mtimerText.setText("Resend code");
-                sendVerificationCode(phonenumber);
-                mtimerText.setOnClickListener(new View.OnClickListener() {
+                resendTimerText.setText("Resend code");
+                sendVerificationCode(mobileNumber);
+                resendTimerText.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         mTimeLeft = Start_Time;
                         startTimer();
-                        sendVerificationCode(phonenumber);
+                        sendVerificationCode(mobileNumber);
                         Toast.makeText(VerifyPhoneOtp.this,"Resending Code",Toast.LENGTH_LONG).show();
                     }
                 });
@@ -113,14 +117,14 @@ public class VerifyPhoneOtp extends AppCompatActivity {
 
             }
         }.start();
-        mTimerRunning = true;
+        resendTimerRunning = true;
     }
 
     private void updateCountDownText(){
         int minutes = (int) mTimeLeft / 1000 / 60;
         int seconds = (int) mTimeLeft / 1000 % 60;
         String timeLeftFormatted = String.format(Locale.getDefault(),"%02d:%02d",minutes,seconds);
-        mtimerText.setText(timeLeftFormatted);
+        resendTimerText.setText(timeLeftFormatted);
 
     }
     private  void verifyCode(String code){
@@ -136,15 +140,18 @@ public class VerifyPhoneOtp extends AppCompatActivity {
 
                 if(task.isSuccessful()){
                    // Toast.makeText(VerifyPhoneOtp.this,userstatus,Toast.LENGTH_LONG).show();
-                    if(userstatus.equals("false")){
+                    if(userStatus.equals("guardian")){
+
                         Intent intent = new Intent(VerifyPhoneOtp.this,TabBottomParent.class);
                         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
 
                         startActivity(intent);
                     }
-                    else {
-                        Intent intent = new Intent(VerifyPhoneOtp.this,MapsActivityDriver.class);
+                    else if(userStatus.equals("driver")) {
+
+                        Intent intent = new Intent(VerifyPhoneOtp.this,DriverDashBoard.class);
                         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        intent.putExtra("driverMobileNo",mobileNumber);
 
                         startActivity(intent);
                     }

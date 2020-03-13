@@ -36,6 +36,7 @@
             android:alignmentMode="alignMargins"
             android:columnOrderPreserved="false">
             <androidx.cardview.widget.CardView
+
                 android:id="@+id/startRide"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

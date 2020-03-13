@@ -19,30 +19,33 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 
 public class DriverProfileActivity extends AppCompatActivity {
-    private TextView profileName;
-    private TextView phoneNo;
+    private TextView driverProfileName;
+    private TextView driverMobileNo;
     ImageView backButton;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_driver_profile);
+
         backButton=(ImageView)findViewById(R.id.backButton);
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(DriverProfileActivity.this,DriverDashBoard.class);
                 startActivity(intent);
+                finish();
             }
         });
 
-        profileName = findViewById(R.id.profileid);
-        phoneNo = findViewById(R.id.phone_no);
+        driverProfileName = findViewById(R.id.profileid);
+        driverMobileNo = findViewById(R.id.phone_no);
 
         StringBuilder stringBuilder = new StringBuilder();
         try {
             File textFile = new File(Environment.getExternalStorageDirectory(),"profile.txt");
             FileInputStream fileInputStream = new FileInputStream(textFile);
-
 
 
             if (fileInputStream!=null){
@@ -60,12 +63,10 @@ public class DriverProfileActivity extends AppCompatActivity {
             try {
                 JSONObject jsonObject=new JSONObject(profile_data);
                 String name = jsonObject.getString("name");
-                String phone = jsonObject.getString("phone");
+                String mobileNo = jsonObject.getString("phone");
 
-                profileName.setText(name);
-                phoneNo.setText(phone);
-//                System.out.println("name"+name);
-//                System.out.println("phone"+phone);
+                driverProfileName.setText(name);
+                driverMobileNo.setText(mobileNo);
 
             } catch (JSONException e) {
                 e.printStackTrace();

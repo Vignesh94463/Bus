@@ -24,21 +24,11 @@ public class SplashScreen extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
 
-        requestPermission();
-
-//        getSupportActionBar().hide();
-
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                Intent homeIntent = new Intent(SplashScreen.this, DriverHome.class);
-//                startActivity(homeIntent);
-//                finish();
-            }
-        }, SPLASH_TIME_OUT);
-        //  }
+        requestPermission(); // request permission function
 
     }
+
+
 
     private void requestPermission() {
         final String[] PERMISSIONS = {
@@ -51,10 +41,7 @@ public class SplashScreen extends AppCompatActivity {
 
         };
         if (ActivityCompat.shouldShowRequestPermissionRationale(this,Manifest.permission.CAMERA)){
-            new AlertDialog.Builder(this)
-                    .setTitle("Permission needed")
-                    .setMessage("This permission is needed because of this and that")
-                    .setPositiveButton("ok", new DialogInterface.OnClickListener() {
+            new AlertDialog.Builder(this).setTitle("Permission needed").setMessage("This permission is needed because of this and that").setPositiveButton("ok", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             ActivityCompat.requestPermissions(SplashScreen.this,
@@ -75,22 +62,37 @@ public class SplashScreen extends AppCompatActivity {
             ActivityCompat.requestPermissions(SplashScreen.this,PERMISSIONS,1);
         }
 
+
+
     }
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+
         if (requestCode == 1)  {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
 //                Toast.makeText(this, "Permission GRANTED", Toast.LENGTH_SHORT).show();
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        Intent homeIntent = new Intent(SplashScreen.this,DriverDashBoard.class);
+
+                        Intent homeIntent = new Intent(SplashScreen.this,SendPhoneOtp.class);
                         startActivity(homeIntent);
                         finish();
+
                     }
                 },SPLASH_TIME_OUT);
             } else {
-                Toast.makeText(this, "Permission DENIED", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Permission Denied Application wont work", Toast.LENGTH_SHORT).show();
+
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        // kill app
+                        android.os.Process.killProcess(android.os.Process.myPid());
+                        System.exit(1);
+
+                    }
+                },4000);
 
             }
         }
