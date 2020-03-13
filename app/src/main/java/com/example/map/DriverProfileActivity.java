@@ -23,16 +23,20 @@ public class DriverProfileActivity extends AppCompatActivity {
     private TextView driverMobileNo;
     ImageView backButton;
 
+    ReadStorageData data = new ReadStorageData();//reading user data
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_driver_profile);
 
+        data.read();
+
         backButton=(ImageView)findViewById(R.id.backButton);
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 Intent intent = new Intent(DriverProfileActivity.this,DriverDashBoard.class);
                 startActivity(intent);
                 finish();
@@ -42,38 +46,9 @@ public class DriverProfileActivity extends AppCompatActivity {
         driverProfileName = findViewById(R.id.profileid);
         driverMobileNo = findViewById(R.id.phone_no);
 
-        StringBuilder stringBuilder = new StringBuilder();
-        try {
-            File textFile = new File(Environment.getExternalStorageDirectory(),"profile.txt");
-            FileInputStream fileInputStream = new FileInputStream(textFile);
+        driverProfileName.setText(data.name);
+        driverMobileNo.setText(data.mobileNo);
 
-
-            if (fileInputStream!=null){
-                InputStreamReader inputStreamReader = new InputStreamReader(fileInputStream);
-                BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
-
-
-                String line = null;
-                while ((line=bufferedReader.readLine())!=null){
-                    stringBuilder.append(line);
-                }
-                fileInputStream.close();
-            }
-            String profile_data=stringBuilder.toString();
-            try {
-                JSONObject jsonObject=new JSONObject(profile_data);
-                String name = jsonObject.getString("name");
-                String mobileNo = jsonObject.getString("phone");
-
-                driverProfileName.setText(name);
-                driverMobileNo.setText(mobileNo);
-
-            } catch (JSONException e) {
-                e.printStackTrace();
-
-            }
-            // Toast.makeText(SendPhoneOtp.this,"work : "+stringBuilder.toString(),Toast.LENGTH_LONG).show();
-        }catch (IOException e){}
 
     }
 

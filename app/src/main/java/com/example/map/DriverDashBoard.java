@@ -55,7 +55,7 @@ public class DriverDashBoard extends AppCompatActivity {
 
     CardView schoolDetailsButton,driverProfileButton;
     Dialog dialog;
-    Button btnAccept,startTrip;
+    Button okButtonPopup,startTrip;
     ImageView closePopup;
     private Spinner mspinnerBus;
 
@@ -63,6 +63,7 @@ public class DriverDashBoard extends AppCompatActivity {
     public String[] countryNames = {"+ 91","+ 92"};
     public String currentBus;
     private String driverPhone;
+    ReadStorageData data = new ReadStorageData();
 
 
     @Override
@@ -70,14 +71,36 @@ public class DriverDashBoard extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_driver_dash_board);
 
-        driverPhone= getIntent().getStringExtra("driverPhone");
-
-
+        data.read();
+        driverPhone= data.mobileNo;
 
         dialog=new Dialog(this);
         dialog.setContentView(R.layout.custom_popup);
+
         closePopup=(ImageView)dialog.findViewById(R.id.closePopup);
-        btnAccept = (Button)dialog.findViewById(R.id.btnAccept);
+        closePopup.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+
+        okButtonPopup = (Button)dialog.findViewById(R.id.btnAccept);
+        okButtonPopup.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                dialog.dismiss();
+//                Intent intent=new Intent(DriverDashBoard.this,MapsActivityDriver.class);
+//                startActivity(intent);
+
+                updateTrip();//update trip on database
+
+                //push notification
+
+            }
+        });
+
         mspinnerBus=(Spinner)dialog.findViewById(R.id.spinnerBus);
 
 
@@ -96,40 +119,21 @@ public class DriverDashBoard extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
+
                 Intent intent=new Intent(DriverDashBoard.this,DriverProfileActivity.class);
                 startActivity(intent);
             }
         });
-
 
         findViewById(R.id.startRide).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
                 getBusNumber();// addes the number os bus in  busNumber array
-
-                closePopup.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        dialog.dismiss();
-                    }
-                });
-                btnAccept.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-
-//                        Intent intent=new Intent(DriverDashBoard.this,MapsActivityDriver.class);
-//                        startActivity(intent);
-
-                        sendNotification();//push notification
-
-                    }
-                });
                 dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
             }
         });
-
 
         findViewById(R.id.logoutDriver).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -137,7 +141,6 @@ public class DriverDashBoard extends AppCompatActivity {
                 FirebaseAuth.getInstance().signOut();
                 Intent intent=new Intent(DriverDashBoard.this, SendPhoneOtp.class);
                 startActivity(intent);
-//                notification();
 
             }
         });
@@ -173,13 +176,14 @@ public class DriverDashBoard extends AppCompatActivity {
 
                         }
                         loading.dismissDialog();
-                        updateSpinner();
+                        updateSpinner();//update spinner with bus values
 
 
                     runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        dialog.show();
+
+                        dialog.show();//show dilouge box with spinners
                     }
                 });
 
@@ -190,8 +194,6 @@ public class DriverDashBoard extends AppCompatActivity {
                     }
                 }
                 updateSpinner();
-
-
             }
 
             public void updateSpinner(){
@@ -208,9 +210,8 @@ public class DriverDashBoard extends AppCompatActivity {
 
     public void sendNotification(){
 
-
         currentBus = mspinnerBus.getSelectedItem().toString();
-        updateTrip();
+
 
         String message =" Started trip from  school";
 
@@ -237,7 +238,6 @@ public class DriverDashBoard extends AppCompatActivity {
                     }, new Response.ErrorListener() {
                 @Override
                 public void onErrorResponse(VolleyError error) {
-                    Log.d("MUR", "onError: "+error.networkResponse);
 //                    Toast.makeText(DriverDashBoard.this,"error",Toast.LENGTH_LONG).show();
 
                 }
@@ -259,16 +259,20 @@ public class DriverDashBoard extends AppCompatActivity {
         }catch (JSONException e){
             e.printStackTrace();
         }
-        Toast toast = Toast.makeText(DriverDashBoard.this,"pappus",Toast.LENGTH_LONG);
-        toast.show();
+//        Toast toast = Toast.makeText(DriverDashBoard.this,"pappus",Toast.LENGTH_LONG);
+//        toast.show();
 
 
     }
     public void updateTrip(){
+
+        final Loading loading = new Loading(DriverDashBoard.this);
+        loading.startLoading();
+
         OkHttpClient client = new OkHttpClient();
 
             MediaType MEDIA_TYPE = MediaType.parse("application/json");
-            JSONObject postdata = new JSONObject();
+            final JSONObject postdata = new JSONObject();
             try {
                 postdata.put("mobile_number", driverPhone);
                 postdata.put("bus_number", Long.toString(mspinnerBus.getSelectedItemId()+1));
@@ -278,7 +282,6 @@ public class DriverDashBoard extends AppCompatActivity {
             } catch(JSONException e){
                 e.printStackTrace();
             }
-        System.out.println("sasi data"+postdata);
 
         RequestBody body = RequestBody.create(MEDIA_TYPE, postdata.toString());
             final okhttp3.Request request = new okhttp3.Request.Builder()
@@ -297,7 +300,6 @@ public class DriverDashBoard extends AppCompatActivity {
                 @Override
                 public void onResponse(Call call, okhttp3.Response response) throws IOException {
 
-                    System.out.println("sasi"+response);
 
                     if( response.isSuccessful()) {
                         String myResponse = response.body().string();
@@ -306,14 +308,12 @@ public class DriverDashBoard extends AppCompatActivity {
                             JSONObject data = jsonObject.getJSONObject("data");
                             String id = data.getString("id");
 
-                            System.out.println("sasi id "+id);
-
+                            loading.dismissDialog();
+                            sendNotification();
 
                             Intent intent=new Intent(DriverDashBoard.this,MapsActivityDriver.class);
-                            intent.putExtra("id",id);
+                            intent.putExtra("tripId",id);
                             intent.putExtra("busId",Long.toString(mspinnerBus.getSelectedItemId()+1));
-                            intent.putExtra("phoneNumber",driverPhone);
-
 
                             startActivity(intent);
 

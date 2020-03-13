@@ -151,7 +151,6 @@ public class VerifyPhoneOtp extends AppCompatActivity {
 
                         Intent intent = new Intent(VerifyPhoneOtp.this,DriverDashBoard.class);
                         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                        intent.putExtra("driverMobileNo",mobileNumber);
 
                         startActivity(intent);
                     }

@@ -78,18 +78,18 @@ public class MapsActivityDriver extends FragmentActivity implements OnMapReadyCa
     private  String busId;
     private  String driverPhone;
 
+    ReadStorageData data = new ReadStorageData();
+
     //Button logoutButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        tripId =getIntent().getStringExtra("id");
+        data.read();
+        tripId =getIntent().getStringExtra("tripId");
         busId=getIntent().getStringExtra("busId");
-        driverPhone=getIntent().getStringExtra("phoneNumber");
-
-
-
+        driverPhone=data.mobileNo;
 
 
         setContentView(R.layout.activity_maps_driver);
@@ -97,6 +97,7 @@ public class MapsActivityDriver extends FragmentActivity implements OnMapReadyCa
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+
         backButton=(ImageView) findViewById(R.id.driverMapBackButton);
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -105,20 +106,15 @@ public class MapsActivityDriver extends FragmentActivity implements OnMapReadyCa
                 startActivity(intent);
             }
         });
-//        logoutButton=(Button)findViewById(R.id.logout);
-//        logoutButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Toast toast = Toast.makeText(MapsActivityDriver.this,"sasi",Toast.LENGTH_LONG);
-//                FirebaseAuth.getInstance().signOut();
-//                Intent intent=new Intent(MapsActivityDriver.this, SendPhoneOtp.class);
-//                startActivity(intent);
-//            }
-//        });
+
+
         findViewById(R.id.stopTripButton).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 onStopButton();
+
+                final Loading loading = new Loading(MapsActivityDriver.this);
+                loading.startLoading();
 
 
                 OkHttpClient client = new OkHttpClient();
@@ -128,15 +124,15 @@ public class MapsActivityDriver extends FragmentActivity implements OnMapReadyCa
                     @Override
                     public void onFailure(Call call, IOException e) {
 
-
                     }
 
                     @Override
                     public void onResponse(Call call, Response response) throws IOException {
+
                         sendNotification();
 
+                        loading.dismissDialog();
                         Intent intent = new Intent(MapsActivityDriver.this,DriverDashBoard.class);
-                        intent.putExtra("driverPhone",driverPhone);
                         startActivity(intent);
                         finish();
 
@@ -152,19 +148,22 @@ public class MapsActivityDriver extends FragmentActivity implements OnMapReadyCa
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
+
         mMap = googleMap;
+
         if(Build.VERSION.SDK_INT>= Build.VERSION_CODES.M){
         if (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             return;
         }}
         buildGoogleApiClient();
+
         mMap.setMyLocationEnabled(true);
         mMap.getUiSettings().setMyLocationButtonEnabled(false);
         mMap.setOnMyLocationButtonClickListener(new GoogleMap.OnMyLocationButtonClickListener() {
             @Override
             public boolean onMyLocationButtonClick() {
-                if (mGoogleApiClient != null) {
 
+                if (mGoogleApiClient != null) {
 
 //                    Location location = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
 //                    longitude = location.getLongitude();
@@ -199,9 +198,7 @@ public class MapsActivityDriver extends FragmentActivity implements OnMapReadyCa
         mMap.animateCamera(cu);
 
 
-        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Bus1");
-
-
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Bus"+busId);
         ref.child("status").setValue("running");
 
         GeoFire geoFire = new GeoFire(ref);
@@ -225,6 +222,7 @@ public class MapsActivityDriver extends FragmentActivity implements OnMapReadyCa
 
     @Override
     public void onConnected(@Nullable Bundle bundle) {
+
         mLocationRequest = new LocationRequest();
         mLocationRequest.setInterval(2000);
         mLocationRequest.setFastestInterval(2000);
@@ -254,7 +252,7 @@ public class MapsActivityDriver extends FragmentActivity implements OnMapReadyCa
     protected void onStop()
     {
         super.onStop();
-        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Bus1");
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Bus"+busId);
 //        LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
 
         GeoFire geoFire = new GeoFire(ref);
@@ -262,9 +260,10 @@ public class MapsActivityDriver extends FragmentActivity implements OnMapReadyCa
 
     }
     public void onStopButton(){
-        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Bus1");
+
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Bus"+busId);
         ref.child("status").setValue("stopped");
-    LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
+        LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
 
 
     }
@@ -290,7 +289,6 @@ public class MapsActivityDriver extends FragmentActivity implements OnMapReadyCa
                 @Override
                 public void onResponse(JSONObject response) {
 //                            Toast.makeText(DriverDashBoard.this,"message send"+response,Toast.LENGTH_LONG).show();
-
                 }
             }, new com.android.volley.Response.ErrorListener() {
                 @Override

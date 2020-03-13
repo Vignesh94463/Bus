@@ -39,6 +39,7 @@ import okhttp3.Response;
 import static com.example.map.CountryData.countryCode;
 import static com.example.map.CountryData.countryaNames;
 
+
 public class SendPhoneOtp extends AppCompatActivity {
 
     private Spinner spinnerCountryCode;
@@ -50,11 +51,14 @@ public class SendPhoneOtp extends AppCompatActivity {
     String mobileNumber;
     SharedPreferences sharedpreferences;
 
+    ReadStorageData data = new ReadStorageData();//reading user data
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
+
 
         wrongNoText = findViewById(R.id.wrongnumber);
         wrongNoText.setVisibility(View.GONE);
@@ -72,7 +76,7 @@ public class SendPhoneOtp extends AppCompatActivity {
 
             public void onClick(View view) {
 
-                 code = countryCode[spinnerCountryCode.getSelectedItemPosition()];
+                code = countryCode[spinnerCountryCode.getSelectedItemPosition()];
                 mobileNumber = editText.getText().toString().trim();// get number from text view
 
                  if(mobileNumber.isEmpty()||mobileNumber.length()<10){
@@ -201,70 +205,53 @@ public class SendPhoneOtp extends AppCompatActivity {
     protected void onStart() {
 
         super.onStart();
+
         if(FirebaseAuth.getInstance().getCurrentUser() !=null){
-            StringBuilder stringBuilder = new StringBuilder();
-            try {
-               File textFile = new File(Environment.getExternalStorageDirectory(),"profile.txt");
-               FileInputStream fileInputStream = new FileInputStream(textFile);
+//            StringBuilder stringBuilder = new StringBuilder();
+//            try {
+//               File textFile = new File(Environment.getExternalStorageDirectory(),"profile.txt");
+//               FileInputStream fileInputStream = new FileInputStream(textFile);
+//
+//
+//               if (fileInputStream!=null){
+//                   InputStreamReader inputStreamReader = new InputStreamReader(fileInputStream);
+//                   BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+//
+//
+//                   String line = null;
+//                   while ((line=bufferedReader.readLine())!=null){
+//                       stringBuilder.append(line);
+//                   }
+//                   fileInputStream.close();
+//               }
+//                String profile_data=stringBuilder.toString();
+//                try {
+//                    JSONObject jsonObject=new JSONObject(profile_data);
+//
+//                    String driver = jsonObject.getString("is_driver");
+//                    String guardian = jsonObject.getString("is_guardian");
+//                    String driverPhone = jsonObject.getString("phone");
+//
+//                    System.out.println("");
+            data.read();
+            System.out.println("pappi"+data.mobileNo);
 
+            if (data.guardian.equals("true")) {
 
-               if (fileInputStream!=null){
-                   InputStreamReader inputStreamReader = new InputStreamReader(fileInputStream);
-                   BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+                String busNo = data.busID; //getting bus no of guardian
+                FirebaseMessaging.getInstance().subscribeToTopic("Bus" + busNo);
 
-
-                   String line = null;
-                   while ((line=bufferedReader.readLine())!=null){
-                       stringBuilder.append(line);
-                   }
-                   fileInputStream.close();
-               }
-                String profile_data=stringBuilder.toString();
-                try {
-                    JSONObject jsonObject=new JSONObject(profile_data);
-
-                    String driver = jsonObject.getString("is_driver");
-                    String guardian = jsonObject.getString("is_guardian");
-                    String driverPhone = jsonObject.getString("phone");
-
-                    System.out.println("");
-
-
-
-                if (guardian.equals("true")) {
-
-
-                    String busNo = jsonObject.getString("bus_id"); //getting bus no of guardian
-
-                    FirebaseMessaging.getInstance().subscribeToTopic("Bus"+busNo);
-
-                    Intent intent = new Intent(this,TabBottomParent.class);
+                Intent intent = new Intent(this, TabBottomParent.class);
 //                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(intent);
+            }else  if (data.driver.equals("true")){
 
-                    startActivity(intent);
-                }
-
-                else  if (driver.equals("true")){
-
-//                    FirebaseMessaging.getInstance().subscribeToTopic("Driver");
 
                     Intent intent = new Intent(this,DriverDashBoard.class);
 //                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                    intent.putExtra("driverMobileNo",driverPhone);
-
-
                     startActivity(intent);
-                }
-                } catch (JSONException e) {
-                    e.printStackTrace();
-
-                }
+            }
                // Toast.makeText(SendPhoneOtp.this,"work : "+stringBuilder.toString(),Toast.LENGTH_LONG).show();
-            }catch (IOException e){}
-
-
-
-
 
         }
     }
