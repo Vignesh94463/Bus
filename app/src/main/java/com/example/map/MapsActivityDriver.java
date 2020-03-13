@@ -70,7 +70,7 @@ public class MapsActivityDriver extends FragmentActivity implements OnMapReadyCa
     GoogleApiClient mGoogleApiClient;
     Location mLastLocation;
     LocationRequest mLocationRequest;
-    ImageView backButton;
+
     String tripStopUrl = "https://auggbus.herokuapp.com/trip_stop/";
     private String URL = "https://fcm.googleapis.com/fcm/send";
 
@@ -87,6 +87,7 @@ public class MapsActivityDriver extends FragmentActivity implements OnMapReadyCa
         super.onCreate(savedInstanceState);
 
         data.read();
+
         tripId =getIntent().getStringExtra("tripId");
         busId=getIntent().getStringExtra("busId");
         driverPhone=data.mobileNo;
@@ -98,20 +99,12 @@ public class MapsActivityDriver extends FragmentActivity implements OnMapReadyCa
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
-        backButton=(ImageView) findViewById(R.id.driverMapBackButton);
-        backButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent=new Intent(MapsActivityDriver.this,DriverDashBoard.class);
-                startActivity(intent);
-            }
-        });
 
 
         findViewById(R.id.stopTripButton).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                onStopButton();
+
 
                 final Loading loading = new Loading(MapsActivityDriver.this);
                 loading.startLoading();
@@ -130,6 +123,8 @@ public class MapsActivityDriver extends FragmentActivity implements OnMapReadyCa
                     public void onResponse(Call call, Response response) throws IOException {
 
                         sendNotification();
+                        onStopButton();
+
 
                         loading.dismissDialog();
                         Intent intent = new Intent(MapsActivityDriver.this,DriverDashBoard.class);
@@ -261,6 +256,8 @@ public class MapsActivityDriver extends FragmentActivity implements OnMapReadyCa
     }
     public void onStopButton(){
 
+        System.out.println("sasi"+"  Bus"+busId);
+
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Bus"+busId);
         ref.child("status").setValue("stopped");
         LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
@@ -318,7 +315,5 @@ public class MapsActivityDriver extends FragmentActivity implements OnMapReadyCa
 
 
     }
-
-
 
 }
