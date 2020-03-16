@@ -5,7 +5,7 @@ import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
-import android.content.Context;
+import android.app.TaskStackBuilder;
 import android.content.Intent;
 import android.graphics.Color;
 import android.media.Ringtone;
@@ -16,6 +16,7 @@ import android.util.Log;
 
 import androidx.core.app.NotificationCompat;
 
+import com.google.firebase.database.core.Context;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 
@@ -38,6 +39,8 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         String body = remoteMessage.getNotification().getBody();
 
         Map<String, String> extraData = remoteMessage.getData();
+        System.out.println("sasi32"+extraData);
+
 
 
 
@@ -45,18 +48,24 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                 new NotificationCompat.Builder(this, "TAC")
                         .setContentTitle(title)
                         .setContentText(body)
-                        .setSmallIcon(R.drawable.ic_launcher_background);
+                        .setSmallIcon(R.drawable.launchericon);
 
         Intent intent;
 
-        intent = new Intent(this, MapsActivityParent.class);
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, 10, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        ReadStorageData readStorageData = new ReadStorageData();
+        readStorageData.read();
 
-        notificationBuilder.setContentIntent(pendingIntent);
 
+        if (readStorageData.guardian.equals("true")) {
+
+
+            intent = new Intent(this, MapsActivityParent.class);
+            PendingIntent pendingIntent = PendingIntent.getActivity(this, 10, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+            notificationBuilder.setContentIntent(pendingIntent);
+
+        }
 
         NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-
 
         int id = (int) System.currentTimeMillis();
 

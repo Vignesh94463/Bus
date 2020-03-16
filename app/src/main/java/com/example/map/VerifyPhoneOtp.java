@@ -21,7 +21,6 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.PhoneAuthCredential;
 import com.google.firebase.auth.PhoneAuthProvider;
 
-import java.io.IOException;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
@@ -103,7 +102,6 @@ public class VerifyPhoneOtp extends AppCompatActivity {
             public void onFinish() {
 
                 resendTimerText.setText("Resend code");
-                sendVerificationCode(mobileNumber);
                 resendTimerText.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -142,7 +140,7 @@ public class VerifyPhoneOtp extends AppCompatActivity {
                    // Toast.makeText(VerifyPhoneOtp.this,userstatus,Toast.LENGTH_LONG).show();
                     if(userStatus.equals("guardian")){
 
-                        Intent intent = new Intent(VerifyPhoneOtp.this,TabBottomParent.class);
+                        Intent intent = new Intent(VerifyPhoneOtp.this, ParentDashBoard.class);
                         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
 
                         startActivity(intent);

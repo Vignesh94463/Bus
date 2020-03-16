@@ -127,8 +127,6 @@ public class MapsActivityDriver extends FragmentActivity implements OnMapReadyCa
 
 
                         loading.dismissDialog();
-                        Intent intent = new Intent(MapsActivityDriver.this,DriverDashBoard.class);
-                        startActivity(intent);
                         finish();
 
 
@@ -256,7 +254,6 @@ public class MapsActivityDriver extends FragmentActivity implements OnMapReadyCa
     }
     public void onStopButton(){
 
-        System.out.println("sasi"+"  Bus"+busId);
 
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Bus"+busId);
         ref.child("status").setValue("stopped");

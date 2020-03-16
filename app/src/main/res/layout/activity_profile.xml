@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:background="@drawable/profilebackground"
     android:layout_height="match_parent"
-    tools:context="com.example.map.ProfileActivity">
+    tools:context="com.example.map.ParentProfileActivity">
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="match_parent"

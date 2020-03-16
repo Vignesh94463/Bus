@@ -24,7 +24,26 @@ public class SplashScreen extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
 
-        requestPermission(); // request permission function
+        //check background notification
+
+//        if(getIntent().hasExtra("status"))
+//
+//        {
+//            System.out.println("xxxxxx"+getIntent().getExtras());
+//
+//            Intent intent = new Intent(this, MapsActivityParent.class);
+//            startActivity(intent);
+//
+//        }
+//        if (getIntent().getExtras() != null) {
+////            for (String key : getIntent().getExtras().keySet()) {
+////                String value = getIntent().getExtras().getString(key);
+////                System.out.println("pappu00"+ "Key: " + key + " Value: " + value);
+////            }
+//        }
+
+
+            requestPermission(); // request permission function
 
     }
 

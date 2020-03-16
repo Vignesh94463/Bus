@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:background="@drawable/profilebackground"
     android:layout_height="match_parent"
-    tools:context="com.example.map.DriverDetailsActivity">
+    tools:context="com.example.map.ParentBusDriverDetails">
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
@@ -93,6 +93,8 @@
                                 android:src="@drawable/phone"
                                 />
                             <TextView
+                                android:id="@+id/phoneid"
+
                                 android:layout_alignLeft="@+id/phone"
                                 android:layout_marginLeft="30dp"
                                 android:textSize="18sp"

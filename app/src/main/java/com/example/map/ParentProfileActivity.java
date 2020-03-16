@@ -18,36 +18,37 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
-public class DriverProfileActivity extends AppCompatActivity {
-    private TextView driverProfileName;
-    private TextView driverMobileNo;
-    ImageView backButton;
+public class ParentProfileActivity extends AppCompatActivity {
+
+    private TextView profileName;
+    private TextView phoneNo;
 
     ReadStorageData data = new ReadStorageData();//reading user data
 
+    ImageView backButton;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_driver_profile);
+        setContentView(R.layout.activity_profile);
 
-        data.read();
-
-        backButton=(ImageView)findViewById(R.id.backButton);
+        backButton = (ImageView) findViewById(R.id.backButton);
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 finish();
             }
         });
 
-        driverProfileName = findViewById(R.id.profileid);
-        driverMobileNo = findViewById(R.id.phone_no);
+        profileName = findViewById(R.id.profileid);
+        phoneNo = findViewById(R.id.phone_no);
 
-        driverProfileName.setText(data.name);
-        driverMobileNo.setText(data.mobileNo);
+        data.read();
+
+        profileName.setText(data.name);
+        phoneNo.setText(data.mobileNo);
+
+
 
 
     }
-
 }

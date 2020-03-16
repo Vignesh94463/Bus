@@ -1,16 +1,9 @@
 package com.example.map;
 
 import androidx.annotation.NonNull;
-import androidx.core.app.NotificationCompat;
-import androidx.core.app.NotificationManagerCompat;
 import androidx.fragment.app.FragmentActivity;
 //import fragment from android.support.v4.app.Fragment;
-import android.app.Notification;
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
 import android.content.Intent;
-import android.graphics.BitmapFactory;
-import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
@@ -55,8 +48,7 @@ public class MapsActivityParent extends FragmentActivity implements OnMapReadyCa
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(MapsActivityParent.this,TabBottomParent.class);
-                startActivity(intent);
+                finish();
             }
         });
     }

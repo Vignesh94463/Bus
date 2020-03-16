@@ -19,18 +19,14 @@ import com.google.firebase.messaging.FirebaseMessaging;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.InputStreamReader;
 
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.MediaType;
-import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
@@ -57,6 +53,10 @@ public class SendPhoneOtp extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
+
+        ErrorMessage errorMessage = new ErrorMessage(this);
+        errorMessage.checkInternet();
 
 
 
@@ -117,6 +117,7 @@ public class SendPhoneOtp extends AppCompatActivity {
                          }
                          @Override
                          public void onResponse(Call call, Response response) throws IOException {
+
 
 
 
@@ -207,51 +208,28 @@ public class SendPhoneOtp extends AppCompatActivity {
         super.onStart();
 
         if(FirebaseAuth.getInstance().getCurrentUser() !=null){
-//            StringBuilder stringBuilder = new StringBuilder();
-//            try {
-//               File textFile = new File(Environment.getExternalStorageDirectory(),"profile.txt");
-//               FileInputStream fileInputStream = new FileInputStream(textFile);
-//
-//
-//               if (fileInputStream!=null){
-//                   InputStreamReader inputStreamReader = new InputStreamReader(fileInputStream);
-//                   BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
-//
-//
-//                   String line = null;
-//                   while ((line=bufferedReader.readLine())!=null){
-//                       stringBuilder.append(line);
-//                   }
-//                   fileInputStream.close();
-//               }
-//                String profile_data=stringBuilder.toString();
-//                try {
-//                    JSONObject jsonObject=new JSONObject(profile_data);
-//
-//                    String driver = jsonObject.getString("is_driver");
-//                    String guardian = jsonObject.getString("is_guardian");
-//                    String driverPhone = jsonObject.getString("phone");
-//
-//                    System.out.println("");
-            data.read();
-            System.out.println("pappi"+data.mobileNo);
 
-            if (data.guardian.equals("true")) {
+                data.read();
 
-                String busNo = data.busID; //getting bus no of guardian
-                FirebaseMessaging.getInstance().subscribeToTopic("Bus" + busNo);
+                if (data.guardian.equals("true")) {
 
-                Intent intent = new Intent(this, TabBottomParent.class);
-//                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                startActivity(intent);
-            }else  if (data.driver.equals("true")){
+                    String busNo = data.busID; //getting bus no of guardian
+                    FirebaseMessaging.getInstance().subscribeToTopic("Bus" + busNo);
 
-
-                    Intent intent = new Intent(this,DriverDashBoard.class);
+                    Intent intent = new Intent(this, ParentDashBoard.class);
 //                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     startActivity(intent);
-            }
-               // Toast.makeText(SendPhoneOtp.this,"work : "+stringBuilder.toString(),Toast.LENGTH_LONG).show();
+                    finish();
+                } else if (data.driver.equals("true")) {
+
+
+                    Intent intent = new Intent(this, DriverDashBoard.class);
+//                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    startActivity(intent);
+                    finish();
+                }
+                // Toast.makeText(SendPhoneOtp.this,"work : "+stringBuilder.toString(),Toast.LENGTH_LONG).show();
+
 
         }
     }

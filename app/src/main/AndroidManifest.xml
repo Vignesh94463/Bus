@@ -10,8 +10,9 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
-
+    <uses-permission android:name="android.permission.CALL_PHONE"/>
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -22,14 +23,13 @@
         <activity android:name=".DriverSchoolDetails"></activity>
         <activity android:name=".DriverProfileActivity" />
         <activity android:name=".DriverDashBoard" />
-        <activity android:name=".DriverDetailsActivity" />
-        <activity android:name=".SchoolDetailsActivity" />
-        <activity android:name=".ProfileActivity" />
+        <activity android:name=".ParentBusDriverDetails" />
+        <activity android:name=".ParentSchoolDetailsActivity" />
+        <activity android:name=".ParentProfileActivity" />
 
         <service
             android:name=".MyFirebaseMessagingService"
-            android:enabled="true"
-            android:exported="true">
+            android:exported="false">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
@@ -42,10 +42,9 @@
             android:name="com.google.firebase.messaging.default_notification_color"
             android:resource="@color/colorAccent" />
 
-        <activity android:name=".Dummy" />
         <activity android:name=".VerifyPhoneOtp" />
         <activity
-            android:name=".TabBottomParent"
+            android:name=".ParentDashBoard"
             android:label="@string/title_activity_tab_bottom_parent"
             android:theme="@style/Theme.AppCompat.DayNight.NoActionBar" />
         <!--
@@ -63,13 +62,14 @@
         <activity
             android:name=".MapsActivityParent"
             android:label="@string/title_activity_maps_parent" />
+
         <activity
+
             android:name=".MapsActivityDriver"
             android:label="@string/title_activity_maps_driver" />
         <activity
             android:name=".DriverMapsActivity"
             android:label="@string/title_activity_driver_maps" />
-        <activity android:name=".RegisterActivity" />
         <activity
             android:name=".ui.login.LoginActivity"
             android:label="@string/title_activity_login" />

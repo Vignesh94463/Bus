@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:background="@drawable/profilebackground"
     android:layout_height="match_parent"
-    tools:context="com.example.map.SchoolDetailsActivity">
+    tools:context="com.example.map.ParentSchoolDetailsActivity">
 
     <LinearLayout
         android:orientation="vertical"
@@ -82,7 +82,7 @@
                             android:textStyle="bold"/>
                         <RelativeLayout
                             android:layout_marginTop="20dp"
-                            android:id="@+id/nameDetail"
+                            android:id="@+id/dialNumber"
                             android:layout_centerHorizontal="true"
                             android:layout_below="@+id/profileid"
                             android:layout_width="wrap_content"
@@ -93,21 +93,21 @@
                                 android:layout_height="25dp"
                                 android:src="@drawable/phone"
                                 />
+
                             <TextView
-                                android:layout_alignLeft="@+id/phone"
-                                android:layout_marginLeft="30dp"
-                                android:textSize="18sp"
-                                android:textStyle="bold"
-                                android:fontFamily="cursive"
                                 android:layout_width="wrap_content"
-                                android:textColor="#000"
                                 android:layout_height="wrap_content"
+                                android:layout_alignLeft="@+id/phone"
+                                android:layout_marginLeft="32dp"
+                                android:fontFamily="cursive"
                                 android:text="+91-8065341211"
-                                />
+                                android:textColor="#000"
+                                android:textSize="18sp"
+                                android:textStyle="bold" />
                         </RelativeLayout>
                         <RelativeLayout
                             android:layout_marginTop="20dp"
-                            android:layout_below="@+id/nameDetail"
+                            android:layout_below="@+id/dialNumber"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content">
                             <TextView

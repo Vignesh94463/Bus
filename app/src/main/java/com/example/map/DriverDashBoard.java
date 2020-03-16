@@ -8,14 +8,11 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.os.Environment;
-import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Spinner;
-import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
@@ -25,15 +22,11 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.messaging.FirebaseMessaging;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -54,38 +47,48 @@ public class DriverDashBoard extends AppCompatActivity {
     private RequestQueue mRequestQue;
 
     CardView schoolDetailsButton,driverProfileButton;
-    Dialog dialog;
+    Dialog dialog,dialogError;
     Button okButtonPopup,startTrip;
-    ImageView closePopup;
+    ImageView closePopup,closeError;
     private Spinner mspinnerBus;
 
     private ArrayList<String> busNumber = new ArrayList<String>();
     public String[] countryNames = {"+ 91","+ 92"};
     public String currentBus;
     private String driverPhone;
+
     ReadStorageData data = new ReadStorageData();
 
+    ErrorMessage errorMessage = new ErrorMessage(this);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_driver_dash_board);
 
+        errorMessage.checkInternet();
+
         data.read();
         driverPhone= data.mobileNo;
 
         dialog=new Dialog(this);
         dialog.setContentView(R.layout.custom_popup);
+        dialog.setCancelable(false);
+
 
         closePopup=(ImageView)dialog.findViewById(R.id.closePopup);
         closePopup.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 dialog.dismiss();
+                busNumber.clear();
+
             }
         });
 
         okButtonPopup = (Button)dialog.findViewById(R.id.btnAccept);
+
+
         okButtonPopup.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -129,8 +132,12 @@ public class DriverDashBoard extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                getBusNumber();// addes the number os bus in  busNumber array
-                dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                if (errorMessage.isNetworkAvailable(DriverDashBoard.this)==true) {
+
+                    getBusNumber();// addes the number os bus in  busNumber array
+                    dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                }else {errorMessage.checkInternet();}
+
 
             }
         });
@@ -138,9 +145,14 @@ public class DriverDashBoard extends AppCompatActivity {
         findViewById(R.id.logoutDriver).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                FirebaseAuth.getInstance().signOut();
-                Intent intent=new Intent(DriverDashBoard.this, SendPhoneOtp.class);
-                startActivity(intent);
+
+                if (errorMessage.isNetworkAvailable(DriverDashBoard.this)==true) {
+
+                        FirebaseAuth.getInstance().signOut();
+                        Intent intent = new Intent(DriverDashBoard.this, SendPhoneOtp.class);
+                        startActivity(intent);
+                    }else {errorMessage.checkInternet();}
+
 
             }
         });
@@ -170,6 +182,8 @@ public class DriverDashBoard extends AppCompatActivity {
                     try {
                         JSONObject jsonObject = new JSONObject(myResponse);
                         JSONArray data = jsonObject.getJSONArray("data");
+
+
 
                         for(int i = 1; i<=data.length();i++){
                             busNumber.add("Bus"+Integer.toString(i));
@@ -227,7 +241,12 @@ public class DriverDashBoard extends AppCompatActivity {
             notificationObj.put("title","Aug Bus");
             notificationObj.put("body",currentBus+message);
 
+            JSONObject extraData = new JSONObject();
+            extraData.put("status","True");
+
             jason.put("notification",notificationObj);
+            jason.put("status",extraData);
+
 
             JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, fireBaseURL, jason,new Response.Listener<JSONObject>() {
                         @Override
